@@ -21,19 +21,7 @@ ARR_L = '<svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width
 ARR_R = '<svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="m10 1 5 5-5 5M15 6H0"/></svg>'
 ORN = '<svg class="orn" viewBox="0 0 72 18" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 9h22M49 9h22"/><path d="M36 2c-6 0-9 7-9 7s3 7 9 7 9-7 9-7-3-7-9-7z"/><circle cx="36" cy="9" r="2.2" fill="currentColor" stroke="none"/></svg>'
 
-SKETCH = """<svg class="sk" viewBox="0 0 315 257" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-<path d="M58 78 Q157 12 256 78"/><path d="M68 78 Q157 26 246 78"/><path d="M157 18v-10M153 9h8M157 3v-1"/><circle cx="157" cy="29" r="2.5"/>
-<path d="M50 78h214v9H50z"/><path d="M57 87h200"/><path d="M122 46 Q157 30 192 46"/>
-<path d="M64 87v100M250 87v100M79 87v100M235 87v100"/>
-<path d="M79 187V127q0-27 27-32 18-3 27 5 24-18 48 0 9-8 27-5 27 5 27 32v60"/>
-<path d="M93 187V131q0-21 20-25 15-2 22 7 22-16 44 0 7-9 22-7 20 4 20 25v56"/>
-<path d="M157 104v83M93 146h128"/>
-<path d="M48 187h218v12H48z"/><path d="M54 199l7 12h192l7-12"/>
-<path d="M62 211v18M252 211v18M99 211q8 18 16 0M133 211q8 18 16 0M167 211q8 18 16 0M201 211q8 18 16 0"/>
-<path d="M30 229h255"/><path d="M14 241q33-8 66 0t66 0 66 0 66 0"/>
-<path d="M276 183q14-34 2-64-3 25-11 37 11-5 18-17M278 183v46"/>
-<path d="M36 183q-10-27 0-51 5 22 10 29M38 183v46"/>
-</svg>"""
+SKETCH = open(os.path.join(ROOT, "assets", "img", "palace-sketch.svg"), encoding="utf-8").read()
 
 MAP = open(os.path.join(ROOT, "assets", "img", "map-jaipur.svg")).read().replace("<svg ", '<svg class="map-ill" ', 1)
 

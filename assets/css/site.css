@@ -231,9 +231,23 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .intro{background:var(--cream);padding:4rem var(--g) 6rem;margin:0 .75rem;transform-origin:50% 0;will-change:transform}
 .intro .orn{width:4.45rem;margin:0 auto 7rem;color:var(--gold-dk)}
 .intro-title{padding-left:.7rem;max-width:81rem}
-.intro-row{display:grid;grid-template-columns:31rem 1fr 19.7rem;align-items:end;margin-top:12rem;padding-left:.7rem}
-.intro-row .sk{grid-column:3;color:#57493e}
-.intro.c-tpl .intro-row{margin-top:3rem}
+.intro-row{display:grid;grid-template-columns:26rem 1fr clamp(28rem, 42vw, 42rem);align-items:end;margin-top:clamp(4rem, 7vh, 6.5rem);padding-left:.7rem}
+.intro-row .sk{grid-column:3;width:100%;height:auto;color:#57493e;overflow:visible;transition:transform .5s var(--e-out),filter .5s ease}
+.intro-row .sk:hover{transform:translateY(-3px);filter:drop-shadow(0 12px 24px rgba(184,150,77,.22))}
+.intro.c-tpl .intro-row{grid-template-columns:31rem 1fr 19.7rem;margin-top:3rem}
+
+/* ---------- Royal Palace Sketch Motion ---------- */
+@keyframes royalSunRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.sk-sun-rays{transform-origin:390px 72px;animation:royalSunRotate 100s linear infinite}
+@keyframes royalHorseGallop{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(-1deg)}}
+.sk-horse-lead{transform-origin:650px 380px;animation:royalHorseGallop 2.2s ease-in-out infinite}
+@keyframes royalHorseCompanion{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.sk-horse-bg{transform-origin:620px 370px;animation:royalHorseCompanion 2.2s ease-in-out infinite .35s}
+@keyframes royalElephantSway{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.sk-elephant{transform-origin:140px 400px;animation:royalElephantSway 4.5s ease-in-out infinite}
+@keyframes royalFlagFlutter{0%,100%{transform:skewX(0deg)}50%{transform:skewX(-5deg)}}
+.sk-flag{transform-origin:260px 156px;animation:royalFlagFlutter 3s ease-in-out infinite}
+.sk-chattri-right .sk-flag{transform-origin:520px 156px;animation-delay:1.5s}
 
 /* ---------- QUOTE OVER FULL-BLEED IMAGE ---------- */
 .cert{position:relative;height:clamp(26rem, 38vw, 34rem);overflow:hidden;color:var(--white);display:flex;align-items:flex-end;padding:3.5rem var(--g)}
@@ -455,7 +469,7 @@ form.sent{display:none}form.sent+.form-ok{display:block}
   .hero-cap{width:auto;right:var(--g);bottom:5rem}
   .intro{margin:0;padding:4rem var(--g)}
   .intro .orn{margin-bottom:3rem}
-  .intro-row{grid-template-columns:1fr;margin-top:3rem;gap:2.5rem}.intro-row .sk{grid-column:auto;width:14rem}
+  .intro-row{grid-template-columns:1fr;margin-top:3rem;gap:2.5rem}.intro-row .sk{grid-column:auto;width:100%;max-width:34rem;margin:0 auto}
   .cert{height:auto;min-height:28rem}.cert-q{font-size:1.45rem}
   .coll-head{flex-direction:column;align-items:flex-start}.coll-head .tx{width:auto}
   .ca-item,.exp .ca-item{width:78vw}.ca-item .im,.exp .ca-item .im{height:58vw}
