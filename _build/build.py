@@ -203,11 +203,16 @@ def hero(media, title, label="", video=None):
           '<p class="wx-desc"><span data-wx="desc"></span> · <span data-wx="hilo"></span></p><p class="wx-time"><span data-wx="time"></span> IST · Kukas, Jaipur</p></aside>') if video else ""
     return f'<section class="hero"><div class="hero-media">{m}</div><div class="hero-cap">{lab}<h1 class="t-hero" data-split="hero">{title}</h1></div>{wx}{snd}</section>'
 
-def intro(title_html, text, tpl=False, sketch=True, ornament=True):
+def intro(title_html, text, tpl=False, sketch=True, ornament=True, kicker=None, pillars=None, sketch_cap=None):
+    k = f'<div class="intro-kicker"><span class="ik-gem">✦</span><span class="ik-text">{kicker}</span><span class="ik-gem">✦</span></div>' if kicker else ""
     t = f'<h2 class="{"h-xl" if tpl else "t-xl"}" data-split>{title_html}</h2>'
-    sk = SKETCH if sketch else "<span></span>"
-    return (f'<div class="intro-wrap"><section class="intro{" c-tpl" if tpl else ""}">{ORN if ornament and tpl else ""}<div class="intro-title">{t}</div>'
-            f'<div class="intro-row"><div class="p-l" data-split="text">{text}</div><span></span>{sk}</div></section></div>')
+    sk_content = (f'{SKETCH}<p class="sk-cap">{sketch_cap}</p>' if sketch_cap else SKETCH) if sketch else ""
+    sk_wrap = f'<div class="intro-sketch-wrap">{sk_content}</div>' if sketch else "<span></span>"
+    pil = f'<div class="intro-pillars">{pillars}</div>' if pillars else "<span></span>"
+    orn = ORN if ornament and tpl else ""
+    return (f'<div class="intro-wrap"><section class="intro{" c-tpl" if tpl else ""}">{orn}'
+            f'<div class="intro-title">{k}{t}</div>'
+            f'<div class="intro-row"><div class="p-l" data-split="text">{text}</div>{pil}{sk_wrap}</div></section></div>')
 
 def cert(image, label, quote):
     return (f'<section class="cert"><div class="cert-img">{img(image, label)}</div><div class="cert-in">'
@@ -409,9 +414,34 @@ def build():
     # HOME — same section order as thesujanlife.com
     P.R = ""
     exp_items = [{"img": p, "title": t, "text": d} for t, p, d in EXPERIENCES]
+    hp_kicker = "An Ode to Rajputana Heritage · Kukas, Jaipur"
+    hp_story = ("To stay at The Vijayran Palace is to live like royalty in the lap of the ancient Aravalli hills: regal architecture, refreshing views and lush gardens, with the warmth of true Rajasthani hospitality."
+                '<p class="intro-p2">Secluded across tranquil acres just moments from Amber Fort, the estate invites you to unhurried days — where morning yoga meets mountain breezes, starry skies crown the evenings, and every carved archway frames a memory to cherish.</p>'
+                f'<a class="intro-cta" href="{u("about-us-luxury-resort-of-jaipur")}"><span>Discover our story</span><svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 6h14m-5-5 5 5-5 5"/></svg></a>')
+    hp_pillars = """<div class="ip-card">
+  <span class="ip-num">01</span>
+  <div class="ip-info">
+    <b>35 Palatial Stays</b>
+    <p>Private pool villas, haveli courtyards &amp; hand-carved jharoka suites</p>
+  </div>
+</div>
+<div class="ip-card">
+  <span class="ip-num">02</span>
+  <div class="ip-info">
+    <b>Aravalli Solitude</b>
+    <p>Ancient mountain backdrop, organic gardens &amp; morning birdsong</p>
+  </div>
+</div>
+<div class="ip-card">
+  <span class="ip-num">03</span>
+  <div class="ip-info">
+    <b>Royal Hospitality</b>
+    <p>Authentic Rajputana warmth, starlit dining &amp; cultural folk evenings</p>
+  </div>
+</div>"""
     body = (hero("assets/video/hero-poster.jpg", "Where dreams come true and once-in-a-lifetime memories are born.", video="assets/video/hero.mp4")
       + intro('A palace for the <span class="soft">romantic,</span> the <span class="soft">celebrant,</span> and those in search of <span class="soft">stillness.</span>',
-              "To stay at The Vijayran Palace is to live like royalty in the lap of the ancient Aravalli hills: regal architecture, refreshing views and lush gardens, with the warmth of true Rajasthani hospitality.")
+              hp_story, kicker=hp_kicker, pillars=hp_pillars, sketch_cap="Hand-carved sandstone jharokas framing the Aravalli hills")
       + cert("2021/06/g6.jpg", "Tripadvisor · 4.5 of 5", f"“{REVIEWS[1][0]}”")
       + collection("Our Stays", "Thirty-five villas, suites and rooms set around courtyards, terraces and gardens. Each offers a different way of living like royalty, from a private-pool villa to a suite framed by a hand-carved jharoka.",
                    btn("Discover our stays", u("accommodation")), room_items(ROOMS))
