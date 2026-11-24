@@ -21,6 +21,158 @@ ARR_L = '<svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width
 ARR_R = '<svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="m10 1 5 5-5 5M15 6H0"/></svg>'
 ORN = '<svg class="orn" viewBox="0 0 72 18" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 9h22M49 9h22"/><path d="M36 2c-6 0-9 7-9 7s3 7 9 7 9-7 9-7-3-7-9-7z"/><circle cx="36" cy="9" r="2.2" fill="currentColor" stroke="none"/></svg>'
 
+GAJ_MENU_ICON = """<span class="gaj-menu-icon" aria-hidden="true"><svg class="menu-gaj-icon" viewBox="0 0 58 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+  <g class="m-el-left">
+    <path d="M 4 19 L 4 12 Q 5 7 11 6 Q 16 6 18 9 Q 20 11 21 14" stroke-width="1.2"/>
+    <path d="M 21 14 Q 22 17 24 16 Q 25 14 24 11 Q 23 7 20 5 Q 18 4 17 6" stroke-width="1.2"/>
+    <path d="M 20 14 Q 22 14 23 12" stroke-width="1"/>
+    <circle cx="17" cy="9.5" r="0.6" fill="currentColor"/>
+    <path d="M 14 7 Q 12 9 13 13 Q 15 14 16 12 Q 16 9 15 7" stroke-width="0.9"/>
+    <path d="M 17 14 L 18 20 M 14 14 L 14 20 M 8 13 L 8 20 M 5 13 L 5 20" stroke-width="1.2"/>
+    <path d="M 4 12 Q 3 15 3 17" stroke-width="0.8"/>
+    <path d="M 8 10 L 14 10 L 13 14 L 9 14 Z" stroke-width="0.8"/>
+  </g>
+  <g class="m-el-center">
+    <line class="m-bar m-bar-1" x1="26" y1="8.5" x2="32" y2="8.5" stroke-width="1.3"/>
+    <circle class="m-bar-dot" cx="29" cy="12" r="1" fill="currentColor"/>
+    <line class="m-bar m-bar-2" x1="26" y1="15.5" x2="32" y2="15.5" stroke-width="1.3"/>
+  </g>
+  <g class="m-el-right">
+    <path d="M 54 19 L 54 12 Q 53 7 47 6 Q 42 6 40 9 Q 38 11 37 14" stroke-width="1.2"/>
+    <path d="M 37 14 Q 36 17 34 16 Q 33 14 34 11 Q 35 7 38 5 Q 40 4 41 6" stroke-width="1.2"/>
+    <path d="M 38 14 Q 36 14 35 12" stroke-width="1"/>
+    <circle cx="41" cy="9.5" r="0.6" fill="currentColor"/>
+    <path d="M 44 7 Q 46 9 45 13 Q 43 14 42 12 Q 42 9 43 7" stroke-width="0.9"/>
+    <path d="M 41 14 L 40 20 M 44 14 L 44 20 M 50 13 L 50 20 M 53 13 L 53 20" stroke-width="1.2"/>
+    <path d="M 54 12 Q 55 15 55 17" stroke-width="0.8"/>
+    <path d="M 50 10 L 44 10 L 45 14 L 49 14 Z" stroke-width="0.8"/>
+  </g>
+</svg></span>"""
+
+ESTATE_SKETCH_SVG = """<svg class="estate-sketch-svg" viewBox="0 0 1400 500" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <!-- Antique Heritage Estate Watermark: The Vijayran Palace -->
+  <g class="es-mountains" opacity="0.45" stroke-width="0.8">
+    <path d="M 0 280 Q 120 220 260 250 Q 380 280 480 230 Q 600 170 750 210 Q 880 240 1020 190 Q 1160 150 1280 200 Q 1350 220 1400 210"/>
+    <path d="M 60 280 Q 180 240 320 260 Q 460 240 580 190 Q 720 170 860 220 Q 980 210 1120 170 Q 1240 180 1400 240"/>
+    <path d="M 550 200 L 565 215 M 570 195 L 590 215 M 590 190 L 615 215 M 710 180 L 725 195 M 730 185 L 750 205 M 1000 200 L 1020 220 M 1030 195 L 1055 220" stroke-dasharray="1 3"/>
+  </g>
+  <g class="es-chhatris" opacity="0.55" stroke-width="0.9">
+    <path d="M 205 235 L 205 218 M 225 235 L 225 218 M 202 218 Q 215 206 228 218 Z"/>
+    <path d="M 215 206 L 215 198"/>
+    <circle cx="215" cy="197" r="1.5" fill="currentColor"/>
+    <path d="M 1142 165 L 1142 146 M 1164 165 L 1164 146 M 1138 146 Q 1153 132 1168 146 Z"/>
+    <path d="M 1153 132 L 1153 122"/>
+    <circle cx="1153" cy="121" r="1.8" fill="currentColor"/>
+  </g>
+  <g class="es-sun" opacity="0.6" stroke-width="0.8">
+    <circle cx="920" cy="110" r="28"/>
+    <circle cx="920" cy="110" r="23" stroke-dasharray="2 3"/>
+    <circle cx="920" cy="110" r="16"/>
+    <circle cx="920" cy="110" r="5" fill="currentColor"/>
+    <path d="M 920 74 L 920 62 M 920 146 L 920 158 M 884 110 L 872 110 M 956 110 L 968 110"/>
+    <path d="M 894 84 L 886 76 M 946 136 L 954 144 M 894 136 L 886 144 M 946 84 L 954 76"/>
+    <path d="M 905 78 Q 910 68 912 65 M 935 78 Q 930 68 928 65 M 905 142 Q 910 152 912 155 M 935 142 Q 930 152 928 155"/>
+    <path d="M 888 95 Q 878 100 875 102 M 888 125 Q 878 120 875 118 M 952 95 Q 962 100 965 102 M 952 125 Q 962 120 965 118"/>
+  </g>
+  <g class="es-elephant-arch" opacity="0.65" stroke-width="1">
+    <path d="M 60 440 L 60 270 Q 60 240 90 230 L 170 230 Q 200 240 200 270 L 200 440" stroke-width="1.3"/>
+    <path d="M 72 440 L 72 280 Q 72 255 100 246 Q 130 230 160 246 Q 188 255 188 280 L 188 440"/>
+    <path d="M 72 310 Q 90 310 95 295 Q 105 275 130 270 Q 155 275 165 295 Q 170 310 188 310"/>
+    <line x1="50" y1="230" x2="210" y2="230" stroke-width="1.4"/>
+    <line x1="55" y1="222" x2="205" y2="222" stroke-width="0.8"/>
+    <rect x="58" y="214" width="144" height="8" stroke-width="1"/>
+    <path d="M 65 214 L 65 206 L 75 206 L 75 214 M 85 214 L 85 206 L 95 206 L 95 214 M 105 214 L 105 206 L 115 206 L 115 214 M 145 214 L 145 206 L 155 206 L 155 214 M 165 214 L 165 206 L 175 206 L 175 214 M 185 214 L 185 206 L 195 206 L 195 214"/>
+    <path d="M 92 370 Q 98 340 125 335 Q 155 330 170 345 Q 178 355 182 370 Q 186 385 186 405 Q 188 420 194 420 Q 200 420 200 410 Q 200 395 194 380 Q 188 368 184 365" stroke-width="1.1"/>
+    <path d="M 160 340 Q 170 334 180 338 Q 188 345 188 355"/>
+    <circle cx="178" cy="348" r="1.5" fill="currentColor"/>
+    <path d="M 155 345 Q 148 355 150 375 Q 165 378 168 365 Z" stroke-width="0.9"/>
+    <path d="M 175 368 Q 186 372 192 365" stroke-width="1.1"/>
+    <path d="M 110 385 L 112 435 M 125 385 L 123 435 M 165 385 L 165 435 M 176 385 L 178 435" stroke-width="1.2"/>
+    <rect x="120" y="348" width="36" height="30" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="138" cy="363" r="6" stroke-width="0.8"/>
+    <path d="M 126 335 L 126 318 M 150 335 L 150 318 M 122 318 Q 138 310 154 318 Z"/>
+    <line x1="138" y1="310" x2="138" y2="302"/>
+  </g>
+  <g class="es-foliage" opacity="0.4" stroke-width="0.8">
+    <path d="M 360 440 Q 365 380 350 340 Q 340 310 330 290 Q 350 300 375 285 Q 395 315 410 350 Q 405 390 415 440"/>
+    <path d="M 290 280 Q 310 240 350 250 Q 390 230 430 255 Q 470 245 480 280 Q 490 320 450 335 Q 400 345 350 330 Q 300 340 290 280 Z"/>
+    <path d="M 320 265 Q 350 255 375 265 M 390 255 Q 420 250 445 265 M 335 295 Q 360 285 390 295" stroke-dasharray="2 3"/>
+  </g>
+  <g class="es-bicycle" opacity="0.65" stroke-width="1.1">
+    <line x1="430" y1="440" x2="680" y2="440" stroke-width="1.2"/>
+    <line x1="440" y1="446" x2="670" y2="446" stroke-width="0.8"/>
+    <rect x="450" y="375" width="210" height="40" stroke-width="0.9" opacity="0.4"/>
+    <line x1="450" y1="395" x2="660" y2="395" stroke-width="0.6" stroke-dasharray="4 4" opacity="0.4"/>
+    <circle cx="510" cy="412" r="26" stroke-width="1.2"/>
+    <circle cx="510" cy="412" r="2.5" fill="currentColor"/>
+    <line x1="510" y1="386" x2="510" y2="438" stroke-width="0.6" opacity="0.7"/>
+    <line x1="484" y1="412" x2="536" y2="412" stroke-width="0.6" opacity="0.7"/>
+    <line x1="492" y1="394" x2="528" y2="430" stroke-width="0.6" opacity="0.7"/>
+    <line x1="492" y1="430" x2="528" y2="394" stroke-width="0.6" opacity="0.7"/>
+    <path d="M 488 406 Q 490 386 510 386 Q 528 386 534 398" stroke-width="1.3"/>
+    <circle cx="590" cy="412" r="26" stroke-width="1.2"/>
+    <circle cx="590" cy="412" r="2.5" fill="currentColor"/>
+    <line x1="590" y1="386" x2="590" y2="438" stroke-width="0.6" opacity="0.7"/>
+    <line x1="564" y1="412" x2="616" y2="412" stroke-width="0.6" opacity="0.7"/>
+    <line x1="572" y1="394" x2="608" y2="430" stroke-width="0.6" opacity="0.7"/>
+    <line x1="572" y1="430" x2="608" y2="394" stroke-width="0.6" opacity="0.7"/>
+    <path d="M 568 400 Q 578 386 598 386 Q 612 396 616 408" stroke-width="1.3"/>
+    <line x1="510" y1="412" x2="548" y2="412" stroke-width="1.3"/>
+    <line x1="510" y1="412" x2="538" y2="378" stroke-width="1.3"/>
+    <line x1="548" y1="412" x2="538" y2="372" stroke-width="1.3"/>
+    <line x1="548" y1="412" x2="580" y2="374" stroke-width="1.3"/>
+    <line x1="538" y1="378" x2="580" y2="374" stroke-width="1.3"/>
+    <line x1="580" y1="372" x2="590" y2="412" stroke-width="1.3"/>
+    <path d="M 528 368 Q 536 364 548 368 Q 544 371 534 371 Z" fill="currentColor"/>
+    <path d="M 580 372 L 578 362 Q 574 360 570 363"/>
+    <rect x="584" y="364" width="16" height="14" stroke-width="0.9" fill="currentColor" fill-opacity="0.08"/>
+    <line x1="584" y1="371" x2="600" y2="371" stroke-width="0.6"/>
+    <circle cx="589" cy="362" r="2.5" stroke-width="0.8"/>
+    <circle cx="595" cy="361" r="2" stroke-width="0.8"/>
+  </g>
+  <g class="es-horse" opacity="0.7" stroke-width="1.1">
+    <path d="M 720 440 L 720 280 L 880 280 L 880 440" stroke-width="1.2" opacity="0.5"/>
+    <path d="M 735 440 L 735 295 Q 800 275 865 295 L 865 440" stroke-width="0.9" opacity="0.5"/>
+    <path d="M 710 280 L 730 265 L 870 265 L 890 280 Z" stroke-width="1" opacity="0.5"/>
+    <path d="M 725 265 Q 800 230 875 265 Z" stroke-width="1.2" opacity="0.5"/>
+    <line x1="800" y1="230" x2="800" y2="218" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="800" cy="217" r="2" fill="currentColor" opacity="0.5"/>
+    <path d="M 798 335 Q 800 326 805 322 Q 808 326 806 333 Z" stroke-width="1"/>
+    <path d="M 795 335 Q 797 325 804 322 Q 803 330 800 336 Z" stroke-width="1"/>
+    <path d="M 806 333 L 814 342 Q 822 350 828 354 Q 828 358 824 360 Q 818 360 812 356 L 805 354" stroke-width="1.2"/>
+    <circle cx="823" cy="356" r="1.2" fill="currentColor"/>
+    <circle cx="810" cy="344" r="1.5" fill="currentColor"/>
+    <path d="M 796 336 Q 775 350 760 366 Q 752 374 748 385" stroke-width="1.3"/>
+    <path d="M 805 354 Q 792 370 782 388 L 768 402" stroke-width="1.2"/>
+    <path d="M 794 338 Q 788 344 792 348 M 788 346 Q 782 352 786 356 M 782 354 Q 774 362 778 366 M 774 364 Q 766 372 770 376" stroke-width="0.9"/>
+    <path d="M 748 385 Q 724 382 708 392 Q 696 402 692 418" stroke-width="1.3"/>
+    <path d="M 692 418 Q 678 415 674 426 Q 670 440 678 454" stroke-width="1.2"/>
+    <path d="M 690 420 Q 678 430 676 448" stroke-width="0.8"/>
+    <path d="M 768 402 Q 760 412 752 416 Q 734 418 718 412" stroke-width="1.2"/>
+    <path d="M 762 408 L 762 444 M 754 412 L 754 444" stroke-width="1.3"/>
+    <rect x="760" y="442" width="6" height="3" fill="currentColor"/>
+    <rect x="752" y="442" width="6" height="3" fill="currentColor"/>
+    <path d="M 714 412 L 712 444 M 702 416 L 698 444" stroke-width="1.3"/>
+    <rect x="710" y="442" width="6" height="3" fill="currentColor"/>
+    <rect x="696" y="442" width="6" height="3" fill="currentColor"/>
+  </g>
+  <g class="es-garden-balustrade" opacity="0.45" stroke-width="0.8">
+    <line x1="940" y1="440" x2="1360" y2="440" stroke-width="1.3"/>
+    <line x1="940" y1="428" x2="1360" y2="428" stroke-width="0.8"/>
+    <path d="M 980 440 L 980 428 M 1020 440 L 1020 428 M 1060 440 L 1060 428 M 1100 440 L 1100 428 M 1140 440 L 1140 428 M 1180 440 L 1180 428 M 1220 440 L 1220 428 M 1260 440 L 1260 428 M 1300 440 L 1300 428"/>
+    <path d="M 1080 428 L 1084 405 Q 1092 395 1100 405 L 1104 428 Z" stroke-width="1"/>
+    <path d="M 1092 400 Q 1070 375 1045 385 M 1092 400 Q 1085 365 1070 355 M 1092 400 Q 1095 360 1105 355 M 1092 400 Q 1115 365 1130 375 M 1092 400 Q 1125 380 1140 395"/>
+    <path d="M 1240 428 Q 1242 418 1248 414 Q 1252 410 1250 405 Q 1248 402 1244 406 Q 1240 412 1236 418" stroke-width="0.9"/>
+    <path d="M 1236 418 Q 1220 425 1205 440 Q 1215 442 1230 435" stroke-width="0.9"/>
+    <circle cx="1249" cy="404" r="0.6" fill="currentColor"/>
+    <path d="M 1251 403 L 1254 402"/>
+  </g>
+  <line x1="0" y1="440" x2="1400" y2="440" stroke-width="1.2" opacity="0.5"/>
+  <line x1="0" y1="444" x2="1400" y2="444" stroke-width="0.6" stroke-dasharray="8 6" opacity="0.3"/>
+</svg>"""
+
+ESTATE_SKETCH_BG = '<div class="estate-sketch-bg" aria-hidden="true">' + ESTATE_SKETCH_SVG + '</div>'
+
 SKETCH = """<svg class="sk" viewBox="0 0 315 257" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 <path d="M58 78 Q157 12 256 78"/><path d="M68 78 Q157 26 246 78"/><path d="M157 18v-10M153 9h8M157 3v-1"/><circle cx="157" cy="29" r="2.5"/>
 <path d="M50 78h214v9H50z"/><path d="M57 87h200"/><path d="M122 46 Q157 30 192 46"/>
@@ -114,7 +266,7 @@ def nav(light):
              ("Call reservations",PHONE_ROOMS,f"tel:{TEL_ROOMS}","2021/06/Main-Gate.jpg")]
     bk = "".join(f'<a class="book-item" href="{h}"><div class="im">{img(p,t)}</div><div class="tx"><b>{t}</b><small>{s}</small></div></a>' for t, s, h, p in books)
     return f"""<header class="nav{' is-light' if light else ''}">
- <div class="nav-l"><button class="nav-menu" aria-label="Menu" aria-expanded="false"><span class="burger"><i></i><i></i><i></i></span><span class="roll"><span>Menu</span><span>Close</span></span></button><button class="wx-chip" data-wx="chip" aria-label="Live weather at the palace, tap to switch °C/°F" hidden><span class="wx-ico" data-wx="icon"></span><span data-wx="place">Kukas, Jaipur</span><b data-wx="temp"></b></button></div>
+ <div class="nav-l"><button class="nav-menu" aria-label="Menu" aria-expanded="false">{GAJ_MENU_ICON}<span class="roll"><span>Menu</span><span>Close</span></span></button><button class="wx-chip" data-wx="chip" aria-label="Live weather at the palace, tap to switch °C/°F" hidden><span class="wx-ico" data-wx="icon"></span><span data-wx="place">Kukas, Jaipur</span><b data-wx="temp"></b></button></div>
  <a class="logo" href="{u()}" aria-label="The Vijayran Palace by Royal Quest Resorts — home"><img class="lg-w" src="{P.R}assets/img/logo-white.svg" alt="The Vijayran Palace by Royal Quest Resorts" width="323" height="72"><img class="lg-g" src="{P.R}assets/img/logo-gold.svg" alt="" aria-hidden="true" width="323" height="72"></a>
  <div class="book"><button class="btn btn-gold" aria-haspopup="true">{roll('Book now')}{ARW}</button><div class="book-panel">{bk}</div></div>
 </header>
@@ -224,12 +376,16 @@ def rail_ui(dots=False):
     if dots: return '<div class="dots"></div>'
     return f'<div class="rail-ui"><div class="rail-bar"><i></i></div><div class="rail-btns"><button data-prev aria-label="Previous">{ARR_L}</button><button data-next aria-label="Next">{ARR_R}</button></div></div>'
 
-def collection(title, text, cta, items, bg="", extra_attrs=""):
-    return (f'<section class="coll" data-rail{bg}{extra_attrs}><div class="coll-head"><div class="tx"><h2 class="t-s" data-split>{title}</h2><p class="p" data-split="text">{text}</p></div>{cta}</div>'
+def collection(title, text, cta, items, bg="", extra_attrs="", sketch=False):
+    sk = ESTATE_SKETCH_BG if sketch else ""
+    cls = "coll" + (" has-sketch" if sketch else "")
+    return (f'<section class="{cls}" data-rail{bg}{extra_attrs}>{sk}<div class="coll-head"><div class="tx"><h2 class="t-s" data-split>{title}</h2><p class="p" data-split="text">{text}</p></div>{cta}</div>'
             f'<div class="rail"><div class="rail-track">{rail_items(items)}</div></div>{rail_ui()}</section>')
 
-def experiences(title, text, items):
-    return (f'<section class="exp" data-rail><div class="exp-head"><h2 class="h-m" data-split>{title}</h2><p class="p-s" data-split="text">{text}</p></div>'
+def experiences(title, text, items, sketch=False):
+    sk = ESTATE_SKETCH_BG if sketch else ""
+    cls = "exp" + (" has-sketch" if sketch else "")
+    return (f'<section class="{cls}" data-rail>{sk}<div class="exp-head"><h2 class="h-m" data-split>{title}</h2><p class="p-s" data-split="text">{text}</p></div>'
             f'<div class="rail"><div class="rail-track">{rail_items(items, link=False)}</div></div>{rail_ui()}</section>')
 
 def gallery(paths, alts=None, title="Gallery"):
@@ -238,9 +394,11 @@ def gallery(paths, alts=None, title="Gallery"):
     tr = "".join(f'<div class="ca-item"><div class="im">{img(i["img"], i["title"])}</div></div>' for i in items)
     return f'<section class="gal" data-rail><h2 class="h-s" data-split>{title}</h2><div class="rail"><div class="rail-track">{tr}</div></div>{rail_ui(dots=True)}</section>'
 
-def story(title_html, text, cta, images, head="t-l"):
+def story(title_html, text, cta, images, head="t-l", sketch=True):
+    sk = ESTATE_SKETCH_BG if sketch else ""
+    cls = "story" + (" has-sketch" if sketch else "")
     its = "".join(f'<div class="story-item"><div class="im">{img(p, "The Vijayran Palace")}</div></div>' for p in images)
-    return (f'<section class="story"><div class="story-stck"><div class="in"><h2 class="{head}" data-split>{title_html}</h2><p class="p" data-split="text">{text}</p>{cta}</div></div>'
+    return (f'<section class="{cls}">{sk}<div class="story-stck"><div class="in"><h2 class="{head}" data-split>{title_html}</h2><p class="p" data-split="text">{text}</p>{cta}</div></div>'
             f'<div class="story-imgs">{its}</div></section>')
 
 def itinerary(title_html, text, cta):
@@ -421,7 +579,7 @@ def build():
       + collection("Activities & Experiences", "Choose your pace: guided morning yoga, horseback rides into the hills, folk music under the stars, or peaceful moments in our gardens and courtyards.",
                    btn("Explore all activities", u("yoga-spa-pool-luxury-resort-jaipur-rajasthan")),
                    [{"img": p, "title": t, "text": d, "slug": "yoga-spa-pool-luxury-resort-jaipur-rajasthan"} for t, p, d in EXPERIENCES],
-                   extra_attrs=' data-auto-scroll="true"')
+                   extra_attrs=' data-auto-scroll="true"', sketch=True)
       + wedding_home()
       + itinerary('Discover the <span class="soft">royal heritage</span> of Jaipur from our doorstep.',
                   "Amber Fort is about 12 km away and the walled Pink City around 19 km. Hawa Mahal, City Palace, Jal Mahal and the cenotaphs of Gaitore are all within easy reach, with fairytale palaces, colourful temples and splendid havelis to explore before returning to the calm of the palace.",
@@ -517,7 +675,7 @@ def build():
     body = (hero("2021/06/ambertallpool-img.jpg", "Activities", "Culture, adventure & stillness")
       + intro('The <span class="soft">“actual India”,</span> at your doorstep.',
               "A village safari, a majestic elephant ride, a ride on the finest horses, an open jeep safari, or simply gazing at the magnificent night sky. Set in a culturally vibrant region, the palace introduces its guests to an India rich in customs, traditions and beliefs.")
-      + experiences("Experiences", "Choose your pace: active mornings, cultural evenings and quiet moments in between.", [{"img": p, "title": t, "text": d} for t, p, d in EXPERIENCES])
+      + experiences("Experiences", "Choose your pace: active mornings, cultural evenings and quiet moments in between.", [{"img": p, "title": t, "text": d} for t, p, d in EXPERIENCES], sketch=True)
       + feature("2021/05/rajfolk.jpg", "Every evening", "Rajasthani folk music under the stars",
                 "The land of the Ravanahatha, Kalbeliya and Ghoomar. The Vijayran Palace brings you an evening of dance, music and festivity filled with traditional Rajasthani folk songs and dances.")
       + story('Slow mornings, <span class="soft">wild</span> afternoons',
