@@ -65,12 +65,49 @@ MENU_SM = [("Our Story","about-us-luxury-resort-of-jaipur"),("Contact","get-in-t
 
 def nav(light):
     cols = "".join(f'<div class="m-col"><h4><span>{g}</span></h4>' + "".join(f'<a class="m-link" href="{u(s)}"><span>{n}</span></a>' for n, s in it) + "</div>" for g, it in MENU_COLS)
-    feats = [ROOMS[0], ROOMS[4]]
-    fc = "".join(f'<a class="m-card" href="{u(r["slug"])}"><div class="im">{img(r["hero"], r["name"])}</div><p><span>{r["name"]}</span></p><small>{r["count"]}</small></a>' for r in feats)
-    fc += f'<a class="m-card" href="{u("best-destination-wedding-venues-in-jaipur")}"><div class="im">{img("2021/06/g10.jpg","Weddings")}</div><p><span>Weddings</span></p><small>Venues for 100–1,500 guests</small></a>'
-    fc += f'<a class="m-card" href="{u("yoga-spa-pool-luxury-resort-jaipur-rajasthan")}"><div class="im">{img("2021/05/rajfolk.jpg","Folk evenings")}</div><p><span>Experiences</span></p><small>Folk evenings, safaris & yoga</small></a>'
-    sm = '<div class="m-col sm"><h4><span>The Palace</span></h4>' + "".join(f'<a class="m-link" href="{u(s)}"><span>{n}</span></a>' for n, s in MENU_SM)
-    sm += '<div class="m-social">' + "".join(f'<a href="{h}"><span>{n}</span></a>' for n, h in SOCIAL) + "</div></div>"
+    fc = f'''<a class="m-card" href="{u('presidential-villas')}">
+  <div class="im">{img('2021/04/Villa-Master-Room.jpg', 'Presidential Villas')}</div>
+  <div class="m-card-body">
+    <span class="m-tag">Royal Residence</span>
+    <p><span>Presidential Villas</span></p>
+    <small>5 villas · Private plunge pool &amp; garden</small>
+  </div>
+</a>
+<a class="m-card" href="{u('best-destination-wedding-venues-in-jaipur')}">
+  <div class="im">{img('2021/06/g10.jpg', 'Weddings at the Palace')}</div>
+  <div class="m-card-body">
+    <span class="m-tag">Destination Celebrations</span>
+    <p><span>Weddings at the Palace</span></p>
+    <small>Palatial lawns &amp; banquet for 100–1,500 guests</small>
+  </div>
+</a>'''
+    sm = (f'<div class="m-col sm"><h4><span>The Palace</span></h4>'
+          + "".join(f'<a class="m-link" href="{u(s)}"><span>{n}</span></a>' for n, s in MENU_SM)
+          + f'''<div class="m-concierge">
+  <span class="mc-tag">Palace Concierge</span>
+  <p>24/7 Reservations &amp; Inquiries</p>
+  <a class="mc-tel" href="tel:{TEL_ROOMS}">{PHONE_ROOMS}</a>
+</div></div>''')
+    m_bot = f'''<div class="menu-bot">
+  <div class="mb-col mb-res">
+    <span class="mb-lbl">Direct Reservations</span>
+    <div class="mb-links">
+      <a href="tel:{TEL_ROOMS}">{PHONE_ROOMS}</a>
+      <span class="mb-sep">·</span>
+      <a href="mailto:{EMAIL}">{EMAIL}</a>
+    </div>
+  </div>
+  <div class="mb-col mb-loc">
+    <span class="mb-lbl">Palace Location</span>
+    <div class="mb-links">
+      <span>NH-8, Kukas, Jaipur · Near Amber Fort</span>
+    </div>
+  </div>
+  <div class="mb-col mb-soc">
+    <span class="mb-lbl">Connect with the Palace</span>
+    <div class="m-social">''' + "".join(f'<a href="{h}" target="_blank" rel="noopener"><span>{n}</span></a>' for n, h in SOCIAL) + '''</div>
+  </div>
+</div>'''
     books = [("Book a stay","Check rates & availability",BOOK,"2021/05/img01.jpg"),
              ("Weddings & events","Send an enquiry",u("best-destination-wedding-venues-in-jaipur")+"#enquire","2021/06/g5.jpg"),
              ("Day outing","Pool, high tea & dinner",u("resort-near-jaipur-for-day-outing"),"2021/04/LUCK7602.jpg"),
@@ -81,7 +118,7 @@ def nav(light):
  <a class="logo" href="{u()}" aria-label="The Vijayran Palace by Royal Quest Resorts — home"><img class="lg-w" src="{P.R}assets/img/logo-white.svg" alt="The Vijayran Palace by Royal Quest Resorts" width="323" height="72"><img class="lg-g" src="{P.R}assets/img/logo-gold.svg" alt="" aria-hidden="true" width="323" height="72"></a>
  <div class="book"><button class="btn btn-gold" aria-haspopup="true">{roll('Book now')}{ARW}</button><div class="book-panel">{bk}</div></div>
 </header>
-<div class="menu" aria-label="Site menu"><div class="menu-in">{cols}{sm}<div class="m-feat">{fc}</div></div></div>"""
+<div class="menu" aria-label="Site menu"><div class="menu-in"><div class="menu-grid">{cols}{sm}<div class="m-feat">{fc}</div></div>{m_bot}</div></div>"""
 
 def footer():
     links = [("Our Stays","accommodation"),("Our Story","about-us-luxury-resort-of-jaipur"),("Weddings","best-destination-wedding-venues-in-jaipur"),
