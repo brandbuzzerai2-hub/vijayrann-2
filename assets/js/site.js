@@ -327,7 +327,7 @@
 
   /* ---------- STORY: sticky text, images drift (desktop) ---------- */
   ScrollTrigger.matchMedia({
-    '(min-width: 992px)': () => {
+    '(min-width: 1081px)': () => {
       $$('.story').forEach(sec => {
         const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 1 } });
         $$('.story-item', sec).forEach((it, i) => {
@@ -360,71 +360,9 @@
     try { const L = p.getTotalLength(); gsap.fromTo(p, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg'), start: 'top 85%', once: true } }); } catch (_) {}
   });
 
-  /* ==========================================================================
-     ROYAL TYPOGRAPHY STUDIO (Live Font Switcher & Persistence)
-     ========================================================================== */
-  (() => {
-    const PRESET_KEY = 'vj-font-preset';
-    const widget = $('#royalFontWidget');
-    const toggleBtn = $('#rfToggleBtn');
-    const panel = $('#rfPanel');
-    const closeBtn = $('#rfCloseBtn');
-    const resetBtn = $('#rfResetBtn');
-    const opts = $$('.rf-opt');
-
-    const setPreset = (preset, save = true) => {
-      document.documentElement.setAttribute('data-font-preset', preset);
-      opts.forEach(o => o.classList.toggle('is-active', o.dataset.preset === preset));
-      if (save) {
-        try { localStorage.setItem(PRESET_KEY, preset); } catch (_) {}
-      }
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
-    };
-
-    // Load saved preset or default to caslon (Font #10 Libre Caslon Display)
-    let saved = 'caslon';
-    try { saved = localStorage.getItem(PRESET_KEY) || 'caslon'; } catch (_) {}
-    setPreset(saved, false);
-
-    if (toggleBtn && panel) {
-      toggleBtn.addEventListener('click', () => {
-        const isOpen = !panel.hasAttribute('hidden');
-        if (isOpen) {
-          panel.setAttribute('hidden', '');
-          toggleBtn.setAttribute('aria-expanded', 'false');
-        } else {
-          panel.removeAttribute('hidden');
-          toggleBtn.setAttribute('aria-expanded', 'true');
-        }
-      });
-    }
-
-    if (closeBtn && panel) {
-      closeBtn.addEventListener('click', () => {
-        panel.setAttribute('hidden', '');
-        toggleBtn?.setAttribute('aria-expanded', 'false');
-      });
-    }
-
-    // Close panel if clicked outside
-    document.addEventListener('click', e => {
-      if (widget && !widget.contains(e.target) && panel && !panel.hasAttribute('hidden')) {
-        panel.setAttribute('hidden', '');
-        toggleBtn?.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    opts.forEach(opt => {
-      opt.addEventListener('click', () => {
-        const preset = opt.dataset.preset;
-        if (preset) setPreset(preset);
-      });
-    });
-
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => setPreset('caslon'));
-    }
-  })();
+  /* Clear any legacy font preset overrides to enforce Libre Caslon Display */
+  try { localStorage.removeItem('vj-font-preset'); } catch (_) {}
+  document.documentElement.removeAttribute('data-font-preset');
 
   /* ==========================================================================
      WEDDINGS AT THE PALACE — INTERACTIVE VENUE SHOWCASE
