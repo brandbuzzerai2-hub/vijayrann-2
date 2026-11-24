@@ -3,7 +3,6 @@
 python3 build.py  ->  ./dist   (every page keeps its existing royalquestresorts.com URL)"""
 import os, shutil, html, json
 from data import *
-from royal_svgs import ROYAL_SUN, ROYAL_ELEPHANT, ROYAL_HORSE, ROYAL_CYCLE, royal_procession_strip, royal_pursuits
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = OUT = os.path.dirname(HERE)          # pages are written to the repository root (the deployable site)
@@ -333,7 +332,7 @@ def wedding_home():
   <div class="hw-bg-crest"></div>
   <div class="hw-inner">
     <div class="hw-header" data-fade>
-      <div class="wedding-sun-crest"><div class="sun-wrap">{ROYAL_SUN}</div><div class="hw-tag"><span class="hw-gem">✦</span> A Royal Destination Celebration <span class="hw-gem">✦</span></div></div>
+      <div class="hw-tag"><span class="hw-gem">✦</span> A Royal Destination Celebration <span class="hw-gem">✦</span></div>
       <h2 class="hw-title" data-split>Weddings at the Palace</h2>
       <p class="hw-lead" data-split="text">Walk into marital bliss surrounded by centuries of Rajputana grandeur, whispering Aravalli hills, and palatial splendour. Where fairytale dreams transform into royal heritage memories.</p>
     </div>
@@ -416,11 +415,9 @@ def build():
       + cert("2021/06/g6.jpg", "Tripadvisor · 4.5 of 5", f"“{REVIEWS[1][0]}”")
       + collection("Our Stays", "Thirty-five villas, suites and rooms set around courtyards, terraces and gardens. Each offers a different way of living like royalty, from a private-pool villa to a suite framed by a hand-carved jharoka.",
                    btn("Discover our stays", u("accommodation")), room_items(ROOMS))
-      + royal_procession_strip()
       + story('A heritage palace <span class="soft">woven into</span> the Aravalli hills',
               "Royal Quest Resorts created The Vijayran Palace around a simple idea: luxury, world-class service and an atmosphere of solitude. It is where old-world vibes and a glorious past meet the new age, an amalgamation of culture, tradition and contemporary comfort.",
               btn("Discover our story", u("about-us-luxury-resort-of-jaipur"), "dark"), STORY_IMGS)
-      + royal_pursuits()
       + collection("Activities & Experiences", "Choose your pace: guided morning yoga, horseback rides into the hills, folk music under the stars, or peaceful moments in our gardens and courtyards.",
                    btn("Explore all activities", u("yoga-spa-pool-luxury-resort-jaipur-rajasthan")),
                    [{"img": p, "title": t, "text": d, "slug": "yoga-spa-pool-luxury-resort-jaipur-rajasthan"} for t, p, d in EXPERIENCES],
@@ -520,7 +517,6 @@ def build():
     body = (hero("2021/06/ambertallpool-img.jpg", "Activities", "Culture, adventure & stillness")
       + intro('The <span class="soft">“actual India”,</span> at your doorstep.',
               "A village safari, a majestic elephant ride, a ride on the finest horses, an open jeep safari, or simply gazing at the magnificent night sky. Set in a culturally vibrant region, the palace introduces its guests to an India rich in customs, traditions and beliefs.")
-      + royal_pursuits()
       + experiences("Experiences", "Choose your pace: active mornings, cultural evenings and quiet moments in between.", [{"img": p, "title": t, "text": d} for t, p, d in EXPERIENCES])
       + feature("2021/05/rajfolk.jpg", "Every evening", "Rajasthani folk music under the stars",
                 "The land of the Ravanahatha, Kalbeliya and Ghoomar. The Vijayran Palace brings you an evening of dance, music and festivity filled with traditional Rajasthani folk songs and dances.")
