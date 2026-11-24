@@ -129,7 +129,7 @@ def page(path, title, desc, body, light=False, schema=None):
 <meta property="og:type" content="website"><meta property="og:site_name" content="The Vijayran Palace"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{canon}">
 <link rel="icon" href="{P.R}assets/img/crest.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&family=Italianno&family=Jost:wght@300;400;500&family=Roboto+Flex:opsz,wght@8..144,300;8..144,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=Gilda+Display&family=Inter:wght@300;400;500;600&family=Italiana&family=Italianno&family=Jost:wght@300;400;500&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Marcellus&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Prata&family=Roboto+Flex:opsz,wght@8..144,300;8..144,400&display=swap">
 {(f'<link rel="preconnect" href="https://use.typekit.net" crossorigin><link rel="stylesheet" href="https://use.typekit.net/{ADOBE_FONTS_KIT}.css">' if ADOBE_FONTS_KIT else "")}
 <link rel="stylesheet" href="{P.R}assets/css/site.css">
 {ld}
@@ -140,6 +140,7 @@ def page(path, title, desc, body, light=False, schema=None):
 {body}
 </main>
 {footer()}
+{royal_font_widget()}
 <script src="{V}gsap.min.js"></script><script src="{V}ScrollTrigger.min.js"></script><script src="{V}SplitText.min.js"></script>
 <script src="{V}Draggable.min.js"></script><script src="{V}InertiaPlugin.min.js"></script><script src="{V}lenis.min.js"></script>
 <script src="{P.R}assets/js/site.js"></script>
@@ -241,6 +242,235 @@ def ph(label, title_html):
 def room_items(rooms):
     return [{"img": r["card"], "title": r["name"], "text": f'{r["short"]} · {r["count"]}', "href": u(r["slug"])} for r in rooms]
 
+def royal_font_widget():
+    return """<div class="rf-widget" id="royalFontWidget">
+  <button class="rf-pill btn-shimmer" id="rfToggleBtn" type="button" aria-expanded="false" aria-controls="rfPanel">
+    <span class="rf-crown">👑</span>
+    <span>Royal Font Studio</span>
+  </button>
+  <div class="rf-panel" id="rfPanel" hidden>
+    <div class="rf-head">
+      <h3>Royal Typography Studio</h3>
+      <span class="rf-close" id="rfCloseBtn" role="button" aria-label="Close">&times;</span>
+    </div>
+    <p class="rf-intro">Preview all 10 curated royal typefaces paired with bespoke Brandon Grotesque headers. Select any royal voice to preview across the entire website in real time.</p>
+    <div class="rf-options">
+      <!-- 10. Libre Caslon Display (Active Default) -->
+      <div class="rf-opt is-active" data-preset="caslon">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">10. Libre Caslon Display</span>
+          <span class="rf-opt-tag">Active Default</span>
+        </div>
+        <div class="rf-opt-desc">Heritage-book classic. Stately, high-contrast English Caslon serif echoing regal archives and historic manor palaces.</div>
+        <div class="rf-opt-sample" style="font-family:'Libre Caslon Display',serif;">The Vijayran Palace · Jaipur</div>
+      </div>
+      <!-- 2. Cormorant Garamond -->
+      <div class="rf-opt" data-preset="cormorant">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">2. Cormorant Garamond</span>
+          <span class="rf-opt-tag">Aristocratic Serif</span>
+        </div>
+        <div class="rf-opt-desc">Tall, high-contrast Garamond punchcut. The most luxurious editorial feel with slender aristocratic elegance.</div>
+        <div class="rf-opt-sample" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;">Where dreams come true in Jaipur</div>
+      </div>
+      <!-- 3. Cinzel -->
+      <div class="rf-opt" data-preset="cinzel">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">3. Cinzel Roman</span>
+          <span class="rf-opt-tag">Trajan Monumental</span>
+        </div>
+        <div class="rf-opt-desc">Carved Roman capitals in the imperial style of Trajan. Monumental, chiseled all-caps palace inscription.</div>
+        <div class="rf-opt-sample" style="font-family:'Cinzel Decorative',serif;letter-spacing:0.04em;">THE VIJAYRAN PALACE</div>
+      </div>
+      <!-- 4. Playfair Display -->
+      <div class="rf-opt" data-preset="playfair">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">4. Playfair Display</span>
+          <span class="rf-opt-tag">Glamorous Luxury</span>
+        </div>
+        <div class="rf-opt-desc">Glamorous, the classic luxury-hotel look with opulent high-contrast letterforms and grand romantic poise.</div>
+        <div class="rf-opt-sample" style="font-family:'Playfair Display',serif;">Weddings at the Palace</div>
+      </div>
+      <!-- 5. Bodoni Moda -->
+      <div class="rf-opt" data-preset="bodoni">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">5. Bodoni Moda</span>
+          <span class="rf-opt-tag">Haute Couture</span>
+        </div>
+        <div class="rf-opt-desc">Couture aesthetic with whisper-thin hairlines, razor-sharp geometric serifs, and dramatic vertical stress.</div>
+        <div class="rf-opt-sample" style="font-family:'Bodoni Moda',serif;">An Amalgamation of Solitude</div>
+      </div>
+      <!-- 6. Marcellus -->
+      <div class="rf-opt" data-preset="marcellus">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">6. Marcellus</span>
+          <span class="rf-opt-tag">Carved Stone Roman</span>
+        </div>
+        <div class="rf-opt-desc">Carved-stone Roman letters, regal yet soft, warm, and invitingly readable.</div>
+        <div class="rf-opt-sample" style="font-family:'Marcellus',serif;">Thirty-Five Haveli Stays</div>
+      </div>
+      <!-- 7. Gilda Display -->
+      <div class="rf-opt" data-preset="gilda">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">7. Gilda Display</span>
+          <span class="rf-opt-tag">Gentle &amp; Polished</span>
+        </div>
+        <div class="rf-opt-desc">Gentle and polished with rounded terminals and romantic poise. Lovely for palace weddings.</div>
+        <div class="rf-opt-sample" style="font-family:'Gilda Display',serif;">A Destination Wedding Celebration</div>
+      </div>
+      <!-- 8. Italiana -->
+      <div class="rf-opt" data-preset="italiana">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">8. Italiana</span>
+          <span class="rf-opt-tag">Engraved Invitation</span>
+        </div>
+        <div class="rf-opt-desc">Whisper-thin, like an engraved royal wedding invitation on handmade Italian stationery.</div>
+        <div class="rf-opt-sample" style="font-family:'Italiana',serif;">Moments of Pure Stillness</div>
+      </div>
+      <!-- 9. Prata -->
+      <div class="rf-opt" data-preset="prata">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">9. Prata</span>
+          <span class="rf-opt-tag">Warm &amp; Stately</span>
+        </div>
+        <div class="rf-opt-desc">Warm, stately, high-contrast Didone serif with teardrop terminals and dignified Rajput presence.</div>
+        <div class="rf-opt-sample" style="font-family:'Prata',serif;">Villas &amp; Suites at Kukas</div>
+      </div>
+      <!-- 1. Crimson Pro -->
+      <div class="rf-opt" data-preset="crimson">
+        <div class="rf-opt-top">
+          <span class="rf-opt-name">1. Crimson Pro</span>
+          <span class="rf-opt-tag">Palace Chronicle</span>
+        </div>
+        <div class="rf-opt-desc">Current site font, closest free match to Sujan's Minion Pro with warm bookish editorial elegance.</div>
+        <div class="rf-opt-sample" style="font-family:'Crimson Pro',serif;">The Vijayran Palace · Jaipur</div>
+      </div>
+    </div>
+    <div class="rf-footer">
+      <span>Auto-saved to your browser</span>
+      <button class="rf-reset" id="rfResetBtn" type="button">Reset to #10 Libre Caslon</button>
+    </div>
+  </div>
+</div>"""
+
+def wedding_home():
+    venues = [
+        {
+            "id": "vmb",
+            "name": "Vijayran Mahal Bagh",
+            "tag": "1,000–1,500 Guests",
+            "setting": "Grand Front Lawn · Open Sky",
+            "img": "2021/06/g10.jpg",
+            "desc": "The grand palace front lawn framed by the ancient Aravalli peaks. Designed for majestic royal baraat processions, colossal mandaps, and imperial banquets under the starlit sky.",
+            "highlights": ["Capacity for up to 1,500 royal guests", "Regal elephant & horse procession entryway", "Starlit amphitheatre & banquet layout"]
+        },
+        {
+            "id": "rm",
+            "name": "Rang Mahal",
+            "tag": "400–500 Guests",
+            "setting": "Heritage Amphitheatre & Lawns",
+            "img": "2021/06/g4.jpg",
+            "desc": "Featuring a permanent heritage jharokha stage and manicured royal gardens. Ideal for sangeet spectacles, musical nights, and grand varmala ceremonies.",
+            "highlights": ["Inbuilt architectural stone stage", "Acoustically tuned garden setting", "Dedicated cocktail pavilions & gazebos"]
+        },
+        {
+            "id": "rajm",
+            "name": "Raj Mahal Grand Banquet",
+            "tag": "250–300 Guests",
+            "setting": "Palatial Tapestry Hall",
+            "img": "2021/06/g2.jpg",
+            "desc": "An opulent indoor banquet hall embellished with authentic Rajasthani tapestries, crystal chandeliers, hand-carved stone arches, and climate-controlled comfort.",
+            "highlights": ["Artisanal gold-leafing & authentic mirrors", "Complete climate-controlled luxury", "Seamless foyer for royal receptions"]
+        },
+        {
+            "id": "cbp",
+            "name": "Char Bagh & Poolside",
+            "tag": "100–250 Guests",
+            "setting": "Mughal Fountain Courts & Ambar Taal",
+            "img": "2021/06/g6.jpg",
+            "desc": "Char Bagh's geometric fountain courtyards and the turquoise Ambar Taal pool deck. The ultimate intimate backdrop for vibrant Mehendi festivities and sun-drenched Haldi mornings.",
+            "highlights": ["Four-quadrant Mughal fountain symmetry", "Turquoise reflection poolside setting", "Authentic Rajasthani shamiana setups"]
+        }
+    ]
+
+    cards_html = ""
+    for idx, v in enumerate(venues):
+        active_cls = " is-active" if idx == 0 else ""
+        cards_html += (f'<div class="hw-vcard{active_cls}" data-venue-id="{v["id"]}" data-img="{P.R}media/wp-content/uploads/{v["img"]}" '
+                       f'data-title="{v["name"]}" data-tag="{v["tag"]}" data-setting="{v["setting"]}" data-desc="{v["desc"]}" '
+                       f'data-hl1="{v["highlights"][0]}" data-hl2="{v["highlights"][1]}" data-hl3="{v["highlights"][2]}">'
+                       f'<div class="hw-vcard-thumb"><img src="{P.R}media/wp-content/uploads/{v["img"]}" alt="{v["name"]}" loading="lazy"></div>'
+                       f'<div class="hw-vcard-text"><h4>{v["name"]}</h4><p>{v["tag"]} · {v["setting"]}</p></div></div>')
+
+    v0 = venues[0]
+    return f"""<section class="home-wedding" id="weddings">
+  <div class="hw-bg-crest"></div>
+  <div class="hw-inner">
+    <div class="hw-header" data-fade>
+      <div class="hw-tag"><span class="hw-gem">✦</span> A Royal Destination Celebration <span class="hw-gem">✦</span></div>
+      <h2 class="hw-title" data-split>Weddings at the Palace</h2>
+      <p class="hw-lead" data-split="text">Walk into marital bliss surrounded by centuries of Rajputana grandeur, whispering Aravalli hills, and palatial splendour. Where fairytale dreams transform into royal heritage memories.</p>
+    </div>
+
+    <div class="hw-showcase" data-fade>
+      <!-- Featured Interactive Venue Card -->
+      <div class="hw-card-main" data-tilt>
+        <div class="hw-arch-frame">
+          <div class="hw-img-wrap">
+            <img id="hwMainImg" class="hw-main-img" src="{P.R}media/wp-content/uploads/{v0['img']}" alt="{v0['name']}">
+          </div>
+          <div class="hw-img-overlay"></div>
+          <div class="hw-arch-crest">
+            <img src="{P.R}assets/img/crest.png" alt="Crest">
+          </div>
+        </div>
+        <div class="hw-card-info">
+          <div class="hw-badge-row">
+            <span id="hwBadgeTag" class="hw-badge gold">{v0['tag']}</span>
+            <span id="hwBadgeSetting" class="hw-badge outline">{v0['setting']}</span>
+          </div>
+          <h3 id="hwCardTitle" class="hw-card-title">{v0['name']}</h3>
+          <p id="hwCardDesc" class="hw-card-desc">{v0['desc']}</p>
+          <div class="hw-card-highlights">
+            <div class="hw-hl-item"><span class="hw-hl-ico">✦</span> <span id="hwHl1">{v0['highlights'][0]}</span></div>
+            <div class="hw-hl-item"><span class="hw-hl-ico">✦</span> <span id="hwHl2">{v0['highlights'][1]}</span></div>
+            <div class="hw-hl-item"><span class="hw-hl-ico">✦</span> <span id="hwHl3">{v0['highlights'][2]}</span></div>
+          </div>
+          <div class="hw-actions">
+            <a class="btn btn-gold btn-shimmer" href="{u('best-destination-wedding-venues-in-jaipur')}#enquire">Plan Your Royal Wedding</a>
+            <a class="btn btn-line" href="{u('best-destination-wedding-venues-in-jaipur')}">Explore All 7 Venues</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Venue Switcher Column -->
+      <div class="hw-venues-grid" id="hwVenuesGrid">
+        {cards_html}
+      </div>
+    </div>
+
+    <!-- Royal Wedding Stats Strip -->
+    <div class="hw-stats-strip" data-fade>
+      <div class="hw-stat">
+        <span class="hw-stat-n">1,500</span>
+        <span class="hw-stat-l">Max Guest Capacity</span>
+      </div>
+      <div class="hw-stat">
+        <span class="hw-stat-n">7</span>
+        <span class="hw-stat-l">Distinct Royal Venues</span>
+      </div>
+      <div class="hw-stat">
+        <span class="hw-stat-n">35</span>
+        <span class="hw-stat-l">Luxury Haveli Suites &amp; Villas</span>
+      </div>
+      <div class="hw-stat">
+        <span class="hw-stat-n">100%</span>
+        <span class="hw-stat-l">Bespoke Royal Hospitality</span>
+      </div>
+    </div>
+  </div>
+</section>"""
+
 HOTEL_LD = {"@context":"https://schema.org","@type":"Resort","name":"The Vijayran Palace by Royal Quest Resorts","url":SITE,"telephone":PHONE_ROOMS,"email":EMAIL,
  "address":{"@type":"PostalAddress","streetAddress":"NH-8, Kukas, Village Kacherawala","addressLocality":"Jaipur","addressRegion":"Rajasthan","postalCode":"302028","addressCountry":"IN"},
  "checkinTime":"14:00","checkoutTime":"11:00","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.5","reviewCount":"284","bestRating":"5"},"sameAs":[h for _, h in SOCIAL]}
@@ -267,6 +497,7 @@ def build():
                    btn("Explore all activities", u("yoga-spa-pool-luxury-resort-jaipur-rajasthan")),
                    [{"img": p, "title": t, "text": d, "slug": "yoga-spa-pool-luxury-resort-jaipur-rajasthan"} for t, p, d in EXPERIENCES],
                    extra_attrs=' data-auto-scroll="true"')
+      + wedding_home()
       + itinerary('Discover the <span class="soft">royal heritage</span> of Jaipur from our doorstep.',
                   "Amber Fort is about 12 km away and the walled Pink City around 19 km. Hawa Mahal, City Palace, Jal Mahal and the cenotaphs of Gaitore are all within easy reach, with fairytale palaces, colourful temples and splendid havelis to explore before returning to the calm of the palace.",
                   btn("Explore", u("top-holiday-resort-in-jaipur-for-family"), "line")))

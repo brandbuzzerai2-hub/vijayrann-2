@@ -1,40 +1,100 @@
 /* ==========================================================================
    THE VIJAYRAN PALACE — site stylesheet
-   A 1:1 re-creation of the design system of thesujanlife.com
-   (layout, fluid type scale, palette, spacing, components and motion),
-   re-implemented from scratch for Vijayran content.
-
-   Type scale: Sujan sizes everything relative to a 1440px canvas
-   (1rem = 16px @1440). Root font-size is fluid, so the whole page
-   scales proportionally — exactly like the reference.
-   Fonts:  display  Minion Pro  -> "Crimson Pro"  (free Google match)
-           heading  Brandon Grotesque -> "Jost"   (free Google match)
-           quote    Roboto Flex (same), script Italianno (same), body Inter (same)
+   A refined, royal luxury design system inspired by thesujanlife.com
+   with bespoke Rajasthani palace heritage elements, Brandon Grotesque
+   geometric humanist sans, and Libre Caslon Display editorial serif.
    ========================================================================== */
+
+/* ---------- Brandon Grotesque Webfonts ---------- */
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_light-BF64a625c93e709.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_light_italic-BF64a625c93ac64.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_regular-BF64a625c9311e1.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_regular_italic-BF64a625c94445e.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_medium-BF64a625c84a521.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_medium_italic-BF64a625c928c55.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_bold-BF64a625c9151d5.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_bold_italic-BF64a625c93b0ce.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Brandon Grotesque';
+  src: url('../fonts/HvDTrial_Brandon_Grotesque_black-BF64a625c944b08.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root{
   --cream:#F6F3EF; --white:#FBF9F7; --sand:#EEE8DF; --linen:#EFE7D8; --quote-bg:#F9F9F9;
   --gold:#D7B46A; --gold-dk:#B9822B;
   --espresso:#322B26; --cocoa:#3E362F;
   --ink:#333333; --brown:#5C544D; --muted:#79716A;
   --red:#8D1711;
-  --f-display:"minion-pro","Minion Pro","Crimson Pro",Georgia,serif;
-  --f-head:"brandon-grotesque","Brandon Grotesque","Jost",sans-serif;
-  --f-quote:"Roboto Flex",system-ui,sans-serif;
-  --f-script:"Italianno",cursive;
-  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-display:"Libre Caslon Display", "Libre Caslon Text", "Minion Pro", "Crimson Pro", Georgia, serif;
+  --f-head:"Brandon Grotesque", "Jost", sans-serif;
+  --f-quote:"Roboto Flex", system-ui, sans-serif;
+  --f-script:"Italianno", cursive;
+  --f-body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-serif:"Libre Caslon Text", "Crimson Pro", Georgia, serif;
   --g:4rem;                 /* page gutter: 64px @1440 */
   --e-out:cubic-bezier(.16,1,.3,1);
   --e-io:cubic-bezier(.77,0,.18,1);
 }
-html{font-size:calc(100vw / 90)}                 /* 16px @1440 */
-@media (min-width:1920px){html{font-size:21.3px}}
+html{font-size:16px}
+@media (min-width:1920px){html{font-size:16px}}
 @media (max-width:991px){html{font-size:15px}}
 @media (max-width:479px){html{font-size:14px}}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-stopped{overflow:hidden}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--cream);color:var(--ink);font:400 1rem/1.1 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body{margin:0;background:var(--cream);color:var(--ink);font:400 1rem/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:clip}
 img,video,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 h1,h2,h3,h4,p{margin:0;font-weight:400}
@@ -42,37 +102,37 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 ::selection{background:var(--gold);color:var(--espresso)}
 :focus-visible{outline:1px solid var(--gold-dk);outline-offset:3px}
 
-/* ---------- type ---------- */
-.t-hero{font:400 2.85rem/1.15 var(--f-display);letter-spacing:-.01em;color:#fff}
-.t-xl{font:400 2.5rem/1.15 var(--f-display);letter-spacing:-.03rem;color:var(--espresso)}
+/* ---------- type (understated Sujan luxury proportions) ---------- */
+.t-hero{font:400 clamp(1.4rem, 2.15vw, 1.85rem)/1.32 var(--f-display);letter-spacing:-.01em;color:#fff}
+.t-xl{font:400 clamp(1.5rem, 2.2vw, 1.95rem)/1.28 var(--f-display);letter-spacing:-.015em;color:var(--espresso)}
 .t-xl .soft{color:var(--muted)}
-.t-l{font:400 2.2rem/1.2 var(--f-display);letter-spacing:-.025rem;color:var(--espresso)}
+.t-l{font:400 clamp(1.35rem, 1.9vw, 1.7rem)/1.3 var(--f-display);letter-spacing:-.01em;color:var(--espresso)}
 .t-l .soft{color:var(--muted)}
-.t-m{font:400 1.8rem/1.2 var(--f-display);letter-spacing:-.02rem;color:var(--espresso)}
+.t-m{font:400 clamp(1.18rem, 1.6vw, 1.45rem)/1.32 var(--f-display);letter-spacing:-.01em;color:var(--espresso)}
 .t-m .soft{color:var(--muted)}
-.t-s{font:400 1.45rem/1.25 var(--f-display);letter-spacing:-.03rem;color:var(--espresso);text-transform:uppercase}
-.h-xl{font:400 2.5rem/1.25 var(--f-head);color:var(--ink);letter-spacing:-.01em}
-.h-l{font:400 2.2rem/1.3 var(--f-head);color:var(--espresso)}
-.h-m{font:400 1.5rem/1.3 var(--f-head);color:var(--espresso)}
-.h-s{font:400 1.8rem/1.3 var(--f-head);color:var(--ink)}
-.p{font:400 .9rem/1.4 var(--f-body);letter-spacing:-.02rem;color:var(--brown)}                 /* 14.4 */
-.p-l{font:400 1rem/1.4 var(--f-body);letter-spacing:-.02rem;color:var(--muted)}                /* 16 */
-.p-s{font:400 .8rem/1.4 var(--f-body);letter-spacing:-.02rem;color:var(--brown)}               /* 12.8 */
-.lbl{font:400 .8rem/1.2 var(--f-body);letter-spacing:-.02rem;text-transform:uppercase}
-.p p+p,.p-l p+p{margin-top:1em}
+.t-s{font:500 .82rem/1.3 var(--f-head);letter-spacing:.16em;color:var(--espresso);text-transform:uppercase}
+.h-xl{font:400 clamp(1.5rem, 2vw, 1.85rem)/1.25 var(--f-head);color:var(--ink);letter-spacing:-.01em}
+.h-l{font:400 clamp(1.3rem, 1.7vw, 1.55rem)/1.3 var(--f-head);color:var(--espresso)}
+.h-m{font:400 clamp(1.15rem, 1.4vw, 1.35rem)/1.3 var(--f-display);color:var(--espresso)}
+.h-s{font:500 .88rem/1.3 var(--f-head);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.p{font:400 .86rem/1.65 var(--f-body);letter-spacing:-.01rem;color:var(--brown)}
+.p-l{font:400 .95rem/1.65 var(--f-body);letter-spacing:-.01rem;color:var(--muted)}
+.p-s{font:400 .78rem/1.6 var(--f-body);letter-spacing:-.01rem;color:var(--brown)}
+.lbl{font:500 .68rem/1.2 var(--f-head);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+.p p+p,.p-l p+p{margin-top:.9em}
 
 /* line-mask wrappers created by SplitText */
 .ln-mask{overflow:hidden;display:block}
 .js [data-split]{visibility:hidden}
 .js [data-split].is-ready{visibility:visible}
 
-/* ---------- buttons (text roll on hover) ---------- */
-.btn{position:relative;display:inline-flex;align-items:center;gap:.6rem;height:3rem;padding:0 1.5rem;border-radius:.5rem;font:400 1rem/1 var(--f-body);text-transform:uppercase;white-space:nowrap;overflow:hidden;transition:background-color .5s var(--e-out),color .5s var(--e-out),border-color .5s}
-.btn .roll{position:relative;display:block;overflow:hidden;height:1.1em;line-height:1.1}
+/* ---------- buttons (slim, refined, tracked uppercase) ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:.5rem;height:2.55rem;padding:0 1.25rem;border-radius:.35rem;font:500 .72rem/1 var(--f-head);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;overflow:hidden;transition:background-color .5s var(--e-out),color .5s var(--e-out),border-color .5s}
+.btn .roll{position:relative;display:block;overflow:hidden;height:1.15em;line-height:1.15}
 .btn .roll span{display:block;transition:transform .7s var(--e-out)}
 .btn .roll span+span{position:absolute;inset:100% 0 auto 0}
 .btn:hover .roll span{transform:translateY(-100%)}
-.btn-gold{background:var(--gold);color:var(--espresso);font-weight:500}
+.btn-gold{background:var(--gold);color:var(--espresso);font-weight:600}
 .btn-gold:hover{background:#e2c482}
 .btn-dark{background:var(--cocoa);color:var(--white)}
 .btn-dark:hover{background:var(--espresso)}
@@ -87,12 +147,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ul::after{content:"";position:absolute;left:0;right:0;bottom:-.15em;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .8s var(--e-out)}
 .ul:hover::after{transform:scaleX(1);transform-origin:left}
 
-/* ---------- NAV ---------- */
-.nav{position:fixed;inset:0 0 auto;z-index:100;height:4.75rem;padding:0 var(--g);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;color:var(--white);transition:background-color .6s var(--e-out),color .6s var(--e-out),transform .8s var(--e-out)}
+/* ---------- NAV (refined luxury proportions) ---------- */
+.nav{position:fixed;inset:0 0 auto;z-index:100;height:4.25rem;padding:0 var(--g);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;color:var(--white);transition:background-color .6s var(--e-out),color .6s var(--e-out),transform .8s var(--e-out)}
 .nav.is-solid,.nav.is-light{background:var(--cream);color:var(--espresso)}
 .nav.is-hidden{transform:translateY(-100%)}
-.nav-menu{justify-self:start;display:flex;align-items:center;gap:.75rem;height:3rem;font:500 1rem/1 var(--f-body);text-transform:uppercase}
-.burger{position:relative;width:1.25rem;height:.75rem}
+.nav-menu{justify-self:start;display:flex;align-items:center;gap:.65rem;height:2.6rem;font:500 .72rem/1 var(--f-head);letter-spacing:.18em;text-transform:uppercase}
+.burger{position:relative;width:1.15rem;height:.7rem}
 .burger i{position:absolute;left:0;width:100%;height:1.5px;background:currentColor;transition:transform .5s var(--e-io),top .5s var(--e-io)}
 .burger i:nth-child(1){top:0}.burger i:nth-child(2){top:50%}.burger i:nth-child(3){top:100%}
 .menu-open .burger i:nth-child(1){top:50%;transform:rotate(45deg)}
@@ -102,10 +162,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .nav-menu .roll span{display:block;transition:transform .6s var(--e-io)}
 .menu-open .nav-menu .roll span{transform:translateY(-100%)}
 .logo{display:grid;justify-items:center;width:10rem;color:var(--gold)}
-.logo .wm{font:400 2.1rem/1 var(--f-display);letter-spacing:.42em;margin-right:-.42em}
-.logo .sub{font:500 .5rem/1 var(--f-body);letter-spacing:.42em;margin:.45rem -.42em 0 0;text-transform:uppercase;opacity:.85}
+.logo .wm{font:400 1.85rem/1 var(--f-display);letter-spacing:.38em;margin-right:-.38em}
+.logo .sub{font:500 .48rem/1 var(--f-head);letter-spacing:.38em;margin:.4rem -.38em 0 0;text-transform:uppercase;opacity:.85}
 .book{justify-self:end;position:relative}
-.book .btn-gold{height:3rem;padding:0 1.5rem}
+.book .btn-gold{height:2.45rem;padding:0 1.2rem;font-size:.72rem;letter-spacing:.14em}
 .book .btn .arw{transition:transform .6s var(--e-io)}
 .book.open .btn .arw{transform:rotate(180deg)}
 .book-panel{position:absolute;right:0;top:calc(100% + .75rem);width:23rem;background:var(--white);color:var(--espresso);border-radius:.5rem;padding:.75rem;box-shadow:0 1.5rem 3rem rgba(50,43,38,.16);transform-origin:top;display:none}
@@ -399,14 +459,14 @@ form.sent{display:none}form.sent+.form-ok{display:block}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.js [data-split]{visibility:visible}}
 /* polish */
-.hero-cap{width:38rem;max-width:calc(100% - 20rem)}
-.m-col:first-child .m-link{font-size:1.85rem}
+.hero-cap{width:32rem;max-width:calc(100% - 18rem)}
+.m-col:first-child .m-link{font-size:1.6rem}
 .m-social{flex-wrap:wrap;gap:.75rem 1.25rem}
 @media (max-width:600px){
   .nav{grid-template-columns:auto 1fr auto;gap:.75rem}
   .logo{width:auto}
   .logo .wm{font-size:1.35rem;letter-spacing:.3em;margin-right:-.3em}
-  .book .btn-gold{height:2.5rem;padding:0 .85rem;font-size:.8rem}
+  .book .btn-gold{height:2.45rem;padding:0 .85rem;font-size:.72rem}
   .hero-cap{width:auto}
 }
 /* ---------- client logo ---------- */
@@ -421,19 +481,546 @@ form.sent{display:none}form.sent+.form-ok{display:block}
 @media (max-width:600px){.logo{width:9.5rem;justify-self:center}.f-crest{width:4rem}.f-word{width:13rem}}
 /* ---------- live weather (Open-Meteo, no key) ---------- */
 .nav-l{justify-self:start;display:flex;align-items:center;gap:2rem}
-.wx-chip{display:inline-flex;align-items:center;gap:.55rem;height:2.25rem;padding:0 .9rem;border:1px solid currentColor;border-radius:2rem;font:400 .8rem/1 var(--f-body);text-transform:uppercase;letter-spacing:.02em;opacity:.9;transition:opacity .4s,background-color .4s}
+.wx-chip{display:inline-flex;align-items:center;gap:.45rem;height:2rem;padding:0 .8rem;border:1px solid currentColor;border-radius:2rem;font:500 .68rem/1 var(--f-head);text-transform:uppercase;letter-spacing:.08em;opacity:.9;transition:opacity .4s,background-color .4s}
 .wx-chip:hover{opacity:1;background:rgba(255,255,255,.08)}
-.wx-chip b{font-weight:500}
-.wx-ico{display:inline-block;width:1.15rem;height:1.15rem}
+.wx-chip b{font-weight:600}
+.wx-ico{display:inline-block;width:1.05rem;height:1.05rem}
 .wx-ico svg{width:100%;height:100%}
 .wx-hero{position:absolute;z-index:2;right:var(--g);bottom:7.5rem;text-align:right;color:var(--white);opacity:0;transform:translateY(12px);transition:opacity 1.2s var(--e-out),transform 1.2s var(--e-out)}
 .wx-hero.on{opacity:1;transform:none}
-.wx-hero .lbl{color:var(--white);opacity:.85;margin-bottom:.35rem;font-size:.7rem;letter-spacing:.05em}
-.wx-row{display:flex;align-items:center;justify-content:flex-end;gap:.5rem}
-.wx-row .wx-ico{width:1.35rem;height:1.35rem}
-.wx-temp{font:400 2.25rem/1 var(--f-display);color:#fff;letter-spacing:-.02em}
-.wx-desc,.wx-time{font:400 .78rem/1.35 var(--f-body);color:var(--white);opacity:.9}
-.wx-time{font-size:.7rem;opacity:.75;margin-top:.15rem}
+.wx-hero .lbl{color:var(--white);opacity:.85;margin-bottom:.3rem;font:500 .65rem/1.2 var(--f-head);letter-spacing:.16em;text-transform:uppercase}
+.wx-row{display:flex;align-items:center;justify-content:flex-end;gap:.45rem}
+.wx-row .wx-ico{width:1.2rem;height:1.2rem}
+.wx-temp{font:400 1.55rem/1 var(--f-display);color:#fff;letter-spacing:-.01em}
+.wx-desc,.wx-time{font:400 .72rem/1.35 var(--f-head);letter-spacing:.04em;color:var(--white);opacity:.9}
+.wx-time{font-size:.65rem;opacity:.75;margin-top:.15rem}
 .wx-inline{display:block;margin-bottom:.8em;color:var(--espresso);font-weight:500}
-@media (max-width:991px){.wx-chip{display:none!important}.wx-hero{top:6rem;bottom:auto}.wx-temp{font-size:1.85rem}.wx-hero .lbl{font-size:.65rem}}
+@media (max-width:991px){.wx-chip{display:none!important}.wx-hero{top:6rem;bottom:auto}.wx-temp{font-size:1.4rem}.wx-hero .lbl{font-size:.62rem}}
 @media (max-width:600px){.nav-l{gap:0}.wx-hero .wx-desc{display:none}}
+
+/* ==========================================================================
+   10 ROYAL TYPOGRAPHY PRESETS (FEATURING #10 LIBRE CASLON DISPLAY)
+   ========================================================================== */
+html, html[data-font-preset="caslon"] {
+  --f-display: "Libre Caslon Display", "Libre Caslon Text", "Minion Pro", Georgia, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+  --f-serif: "Libre Caslon Text", Georgia, serif;
+}
+html[data-font-preset="crimson"] {
+  --f-display: "Crimson Pro", Georgia, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="cormorant"] {
+  --f-display: "Cormorant Garamond", Garamond, Georgia, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="cinzel"] {
+  --f-display: "Cinzel Decorative", "Cinzel", serif;
+  --f-head: "Brandon Grotesque", "Cinzel", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="playfair"] {
+  --f-display: "Playfair Display", Georgia, serif;
+  --f-head: "Brandon Grotesque", "Jost", serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="bodoni"] {
+  --f-display: "Bodoni Moda", Didot, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="marcellus"] {
+  --f-display: "Marcellus", "Cinzel", serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="gilda"] {
+  --f-display: "Gilda Display", Georgia, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="italiana"] {
+  --f-display: "Italiana", Didot, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+html[data-font-preset="prata"] {
+  --f-display: "Prata", Didot, serif;
+  --f-head: "Brandon Grotesque", "Jost", sans-serif;
+  --f-body: "Inter", sans-serif;
+}
+
+/* ==========================================================================
+   ROYAL CREATIVE MOTION & BESPOKE ELEMENTS
+   ========================================================================== */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+}
+.btn-shimmer:hover::before {
+  left: 140%;
+}
+
+@keyframes royalSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+[data-tilt] {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   HOMEPAGE DEDICATED WEDDINGS SECTION
+   ========================================================================== */
+.home-wedding {
+  position: relative;
+  background: #201a15;
+  color: var(--white);
+  padding: 6rem var(--g) 6.5rem;
+  overflow: hidden;
+}
+.hw-bg-crest {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 48rem; height: 48rem;
+  background: url('../img/crest.png') no-repeat center / contain;
+  opacity: 0.04;
+  pointer-events: none;
+  animation: royalSpin 160s linear infinite;
+}
+.hw-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 84rem;
+  margin: 0 auto;
+}
+.hw-header {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto 4rem;
+}
+.hw-tag {
+  font: 500 0.72rem/1.2 var(--f-head);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+.hw-gem { font-size: 0.75rem; opacity: 0.8; }
+.hw-title {
+  font: 400 clamp(1.8rem, 2.5vw, 2.25rem)/1.2 var(--f-display);
+  color: var(--white);
+  margin-bottom: 1.25rem;
+}
+.hw-lead {
+  font: 400 0.88rem/1.65 var(--f-body);
+  color: var(--sand);
+  opacity: 0.9;
+}
+.hw-showcase {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2.75rem;
+  align-items: stretch;
+  margin-bottom: 4.5rem;
+}
+/* Main Jharokha Arch Card */
+.hw-card-main {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(215,180,106,0.25);
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1.5rem 3.5rem rgba(0,0,0,0.35);
+}
+.hw-arch-frame {
+  position: relative;
+  height: 25rem;
+  overflow: hidden;
+  border-radius: 12rem 12rem 0 0;
+  margin: 1.5rem 1.5rem 0;
+  border: 1px solid rgba(215,180,106,0.35);
+  box-shadow: inset 0 0 2rem rgba(0,0,0,0.4);
+}
+.hw-img-wrap {
+  width: 100%; height: 100%;
+}
+.hw-main-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--e-out), opacity 0.4s ease;
+}
+.hw-card-main:hover .hw-main-img {
+  transform: scale(1.04);
+}
+.hw-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(32,26,21,0.55) 100%);
+  pointer-events: none;
+}
+.hw-arch-crest {
+  position: absolute;
+  top: 1.2rem; left: 50%;
+  transform: translateX(-50%);
+  width: 3rem; height: 3rem;
+  background: rgba(32,26,21,0.75);
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  padding: 0.4rem;
+  backdrop-filter: blur(6px);
+}
+.hw-arch-crest img { width: 100%; height: auto; }
+.hw-card-info {
+  padding: 2rem 2.2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.hw-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+.hw-badge {
+  font: 500 0.65rem/1 var(--f-head);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 0.8rem;
+  border-radius: 2rem;
+}
+.hw-badge.gold {
+  background: var(--gold);
+  color: var(--espresso);
+  font-weight: 600;
+}
+.hw-badge.outline {
+  border: 1px solid rgba(238,232,223,0.3);
+  color: var(--sand);
+}
+.hw-card-title {
+  font: 400 1.55rem/1.25 var(--f-display);
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+.hw-card-desc {
+  font: 400 0.84rem/1.65 var(--f-body);
+  color: var(--sand);
+  opacity: 0.88;
+  margin-bottom: 1.4rem;
+}
+.hw-card-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(238,232,223,0.12);
+}
+.hw-hl-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font: 400 0.82rem/1.3 var(--f-body);
+  color: #fff;
+}
+.hw-hl-ico { font-size: 0.85rem; color: var(--gold); }
+.hw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: auto;
+}
+.hw-actions .btn-line {
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+}
+.hw-actions .btn-line:hover {
+  background: #fff;
+  color: var(--espresso);
+}
+
+/* 4 Venues Interactive Grid */
+.hw-venues-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.hw-vcard {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 0.85rem 1.2rem 0.85rem 0.85rem;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(238,232,223,0.1);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.4s var(--e-out);
+}
+.hw-vcard:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(215,180,106,0.4);
+  transform: translateX(5px);
+}
+.hw-vcard.is-active {
+  background: rgba(215,180,106,0.08);
+  border-color: var(--gold);
+  box-shadow: 0 0.5rem 1.8rem rgba(0,0,0,0.25);
+}
+.hw-vcard-thumb {
+  width: 7.5rem; height: 5.5rem;
+  border-radius: 0.45rem;
+  overflow: hidden;
+}
+.hw-vcard-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--e-out);
+}
+.hw-vcard:hover .hw-vcard-thumb img {
+  transform: scale(1.08);
+}
+.hw-vcard-text h4 {
+  font: 400 1.05rem/1.25 var(--f-display);
+  color: var(--white);
+  margin-bottom: 0.3rem;
+}
+.hw-vcard-text p {
+  font: 500 0.72rem/1.35 var(--f-head);
+  letter-spacing: 0.05em;
+  color: var(--sand);
+  opacity: 0.8;
+}
+.hw-vcard.is-active .hw-vcard-text h4 {
+  color: var(--gold);
+}
+
+/* Stats Strip */
+.hw-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  padding: 1.8rem 2.5rem;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(215,180,106,0.18);
+  border-radius: 0.75rem;
+  text-align: center;
+}
+.hw-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.hw-stat-n {
+  font: 400 1.85rem/1 var(--f-display);
+  color: var(--gold);
+  letter-spacing: -0.01em;
+}
+.hw-stat-l {
+  font: 500 0.65rem/1.2 var(--f-head);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--sand);
+  opacity: 0.85;
+}
+
+@media (max-width: 991px) {
+  .home-wedding { padding: 5rem var(--g); }
+  .hw-showcase { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hw-arch-frame { height: 20rem; }
+  .hw-stats-strip { grid-template-columns: repeat(2, 1fr); gap: 2rem; padding: 2rem; }
+}
+@media (max-width: 600px) {
+  .hw-title { font-size: 2.3rem; }
+  .hw-vcard { grid-template-columns: 6rem 1fr; gap: 1rem; }
+  .hw-vcard-thumb { width: 6rem; height: 5rem; }
+  .hw-stats-strip { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* ==========================================================================
+   ROYAL TYPOGRAPHY STUDIO (LIVE IN-PAGE PREVIEWER)
+   ========================================================================== */
+.rf-widget {
+  position: fixed;
+  left: 2rem;
+  bottom: 2rem;
+  z-index: 1000;
+  font-family: var(--f-body);
+}
+.rf-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 1.25rem 0.65rem 1rem;
+  background: #251f1a;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 2rem;
+  font: 500 0.82rem/1 var(--f-body);
+  letter-spacing: 0.05em;
+  box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.35);
+  cursor: pointer;
+  transition: all 0.3s var(--e-out);
+}
+.rf-pill:hover {
+  background: #322b26;
+  transform: translateY(-2px);
+  box-shadow: 0 0.8rem 2rem rgba(215,180,106,0.35);
+}
+.rf-crown {
+  font-size: 1.1rem;
+}
+.rf-panel {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 1rem);
+  width: 26rem;
+  max-height: 82vh;
+  overflow-y: auto;
+  background: #251f1a;
+  color: var(--white);
+  border: 1px solid var(--gold);
+  border-radius: 1rem;
+  padding: 1.6rem;
+  box-shadow: 0 1.5rem 4rem rgba(0,0,0,0.65);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  z-index: 1001;
+}
+.rf-panel[hidden] {
+  display: none;
+}
+.rf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(215,180,106,0.25);
+  padding-bottom: 0.9rem;
+}
+.rf-head h3 {
+  font: 500 1.05rem/1.2 var(--f-head);
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.rf-close {
+  font-size: 1.4rem;
+  color: var(--sand);
+  opacity: 0.7;
+  cursor: pointer;
+  line-height: 1;
+}
+.rf-close:hover { opacity: 1; color: var(--gold); }
+.rf-intro {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--sand);
+  opacity: 0.85;
+  margin: 0;
+}
+.rf-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.rf-opt {
+  padding: 0.9rem 1.1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(238,232,223,0.12);
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+}
+.rf-opt:hover {
+  background: rgba(215,180,106,0.08);
+  border-color: rgba(215,180,106,0.45);
+}
+.rf-opt.is-active {
+  background: rgba(215,180,106,0.15);
+  border-color: var(--gold);
+}
+.rf-opt-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+.rf-opt-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--white);
+}
+.rf-opt.is-active .rf-opt-name {
+  color: var(--gold);
+}
+.rf-opt-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+}
+.rf-opt-desc {
+  font-size: 0.75rem;
+  color: var(--sand);
+  opacity: 0.75;
+  margin-bottom: 0.6rem;
+  line-height: 1.35;
+}
+.rf-opt-sample {
+  font-size: 1.15rem;
+  line-height: 1.25;
+  color: #fff;
+  border-top: 1px dashed rgba(255,255,255,0.08);
+  padding-top: 0.5rem;
+}
+.rf-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.4rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.75rem;
+  color: var(--sand);
+  opacity: 0.8;
+}
+.rf-reset {
+  color: var(--gold);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+}
+@media (max-width: 600px) {
+  .rf-widget { left: 1rem; bottom: 1rem; }
+  .rf-panel { width: calc(100vw - 2rem); left: 0; }
+}
+

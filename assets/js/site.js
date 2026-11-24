@@ -360,5 +360,156 @@
     try { const L = p.getTotalLength(); gsap.fromTo(p, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg'), start: 'top 85%', once: true } }); } catch (_) {}
   });
 
+  /* ==========================================================================
+     ROYAL TYPOGRAPHY STUDIO (Live Font Switcher & Persistence)
+     ========================================================================== */
+  (() => {
+    const PRESET_KEY = 'vj-font-preset';
+    const widget = $('#royalFontWidget');
+    const toggleBtn = $('#rfToggleBtn');
+    const panel = $('#rfPanel');
+    const closeBtn = $('#rfCloseBtn');
+    const resetBtn = $('#rfResetBtn');
+    const opts = $$('.rf-opt');
+
+    const setPreset = (preset, save = true) => {
+      document.documentElement.setAttribute('data-font-preset', preset);
+      opts.forEach(o => o.classList.toggle('is-active', o.dataset.preset === preset));
+      if (save) {
+        try { localStorage.setItem(PRESET_KEY, preset); } catch (_) {}
+      }
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    };
+
+    // Load saved preset or default to caslon (Font #10 Libre Caslon Display)
+    let saved = 'caslon';
+    try { saved = localStorage.getItem(PRESET_KEY) || 'caslon'; } catch (_) {}
+    setPreset(saved, false);
+
+    if (toggleBtn && panel) {
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = !panel.hasAttribute('hidden');
+        if (isOpen) {
+          panel.setAttribute('hidden', '');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          panel.removeAttribute('hidden');
+          toggleBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    if (closeBtn && panel) {
+      closeBtn.addEventListener('click', () => {
+        panel.setAttribute('hidden', '');
+        toggleBtn?.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    // Close panel if clicked outside
+    document.addEventListener('click', e => {
+      if (widget && !widget.contains(e.target) && panel && !panel.hasAttribute('hidden')) {
+        panel.setAttribute('hidden', '');
+        toggleBtn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const preset = opt.dataset.preset;
+        if (preset) setPreset(preset);
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => setPreset('caslon'));
+    }
+  })();
+
+  /* ==========================================================================
+     WEDDINGS AT THE PALACE — INTERACTIVE VENUE SHOWCASE
+     ========================================================================== */
+  (() => {
+    const mainImg = $('#hwMainImg');
+    const title = $('#hwCardTitle');
+    const desc = $('#hwCardDesc');
+    const badgeTag = $('#hwBadgeTag');
+    const badgeSetting = $('#hwBadgeSetting');
+    const hl1 = $('#hwHl1');
+    const hl2 = $('#hwHl2');
+    const hl3 = $('#hwHl3');
+    const cards = $$('.hw-vcard');
+
+    if (!mainImg || !cards.length) return;
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        cards.forEach(c => c.classList.remove('is-active'));
+        card.classList.add('is-active');
+
+        // Cross-fade image transition
+        if (hasGsap) {
+          gsap.to(mainImg, {
+            opacity: 0,
+            scale: 0.98,
+            duration: 0.25,
+            ease: 'power2.in',
+            onComplete: () => {
+              mainImg.src = card.dataset.img;
+              mainImg.alt = card.dataset.title;
+              if (title) title.textContent = card.dataset.title;
+              if (desc) desc.textContent = card.dataset.desc;
+              if (badgeTag) badgeTag.textContent = card.dataset.tag;
+              if (badgeSetting) badgeSetting.textContent = card.dataset.setting;
+              if (hl1) hl1.textContent = card.dataset.hl1;
+              if (hl2) hl2.textContent = card.dataset.hl2;
+              if (hl3) hl3.textContent = card.dataset.hl3;
+
+              gsap.to(mainImg, { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' });
+            }
+          });
+        } else {
+          mainImg.src = card.dataset.img;
+          mainImg.alt = card.dataset.title;
+          if (title) title.textContent = card.dataset.title;
+          if (desc) desc.textContent = card.dataset.desc;
+          if (badgeTag) badgeTag.textContent = card.dataset.tag;
+          if (badgeSetting) badgeSetting.textContent = card.dataset.setting;
+          if (hl1) hl1.textContent = card.dataset.hl1;
+          if (hl2) hl2.textContent = card.dataset.hl2;
+          if (hl3) hl3.textContent = card.dataset.hl3;
+        }
+      });
+    });
+  })();
+
+  /* ==========================================================================
+     3D MAGNETIC TILT MOTION ([data-tilt])
+     ========================================================================== */
+  (() => {
+    if (reduce) return;
+    const tiltEls = $$('[data-tilt]');
+    tiltEls.forEach(el => {
+      let rect = null;
+      const onMove = e => {
+        if (!rect) rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotX = ((y - cy) / cy) * -6;
+        const rotY = ((x - cx) / cx) * 6;
+        el.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
+      };
+      const onLeave = () => {
+        rect = null;
+        el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      };
+      el.addEventListener('mouseenter', () => { rect = el.getBoundingClientRect(); });
+      el.addEventListener('mousemove', onMove);
+      el.addEventListener('mouseleave', onLeave);
+    });
+  })();
+
   addEventListener('load', () => ScrollTrigger.refresh());
 })();
