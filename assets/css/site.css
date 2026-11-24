@@ -151,16 +151,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .nav{position:fixed;inset:0 0 auto;z-index:100;height:4.25rem;padding:0 var(--g);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;color:var(--white);transition:background-color .6s var(--e-out),color .6s var(--e-out),transform .8s var(--e-out)}
 .nav.is-solid,.nav.is-light{background:var(--cream);color:var(--espresso)}
 .nav.is-hidden{transform:translateY(-100%)}
-.nav-menu{justify-self:start;display:flex;align-items:center;gap:.75rem;height:2.6rem;font:500 .72rem/1 var(--f-head);letter-spacing:.18em;text-transform:uppercase}
-.gaj-menu-icon{display:inline-flex;align-items:center;width:54px;height:22px;color:var(--gold);flex-shrink:0}
-.nav.is-solid .gaj-menu-icon,.nav.is-light .gaj-menu-icon{color:var(--gold-dk)}
-.menu-open .gaj-menu-icon{color:var(--gold-dk)}
-.gaj-menu-icon svg{width:100%;height:100%;overflow:visible;display:block}
-.gaj-menu-icon .m-bar{transition:transform .4s var(--e-io),stroke .2s;transform-origin:29px 12px}
-.gaj-menu-icon .m-bar-dot{transition:opacity .3s var(--e-io)}
-.menu-open .gaj-menu-icon .m-bar-1{transform:translateY(3.5px) rotate(45deg)}
-.menu-open .gaj-menu-icon .m-bar-dot{opacity:0}
-.menu-open .gaj-menu-icon .m-bar-2{transform:translateY(-3.5px) rotate(-45deg)}
+.nav-menu{justify-self:start;display:flex;align-items:center;gap:.65rem;height:2.6rem;font:500 .72rem/1 var(--f-head);letter-spacing:.18em;text-transform:uppercase}
 .burger{position:relative;width:1.15rem;height:.7rem}
 .burger i{position:absolute;left:0;width:100%;height:1.5px;background:currentColor;transition:transform .5s var(--e-io),top .5s var(--e-io)}
 .burger i:nth-child(1){top:0}.burger i:nth-child(2){top:50%}.burger i:nth-child(3){top:100%}
@@ -257,10 +248,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 /* ---------- COLLECTION (drag rail) ---------- */
 .coll{background:var(--cream);padding:5.5rem var(--g) 2rem;overflow:hidden}
-.coll.has-sketch, .story.has-sketch, .exp.has-sketch{position:relative;overflow:hidden}
-.estate-sketch-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;color:var(--gold-dk,#8c6a28);opacity:0.12;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.estate-sketch-bg .estate-sketch-svg{width:100%;height:100%;object-fit:cover;object-position:center bottom}
-.coll.has-sketch > *:not(.estate-sketch-bg), .exp.has-sketch > *:not(.estate-sketch-bg){position:relative;z-index:1}
 .coll-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;margin-bottom:3.5rem}
 .coll-head .tx{width:30.7rem}
 .coll-head .t-s{margin-bottom:1.25rem}
@@ -517,7 +504,7 @@ form.sent{display:none}form.sent+.form-ok{display:block}
 @media (max-width:600px){.logo{width:9.5rem;justify-self:center}.f-crest{width:4rem}.f-word{width:13rem}}
 /* ---------- live weather (Open-Meteo, no key) ---------- */
 .nav-l{justify-self:start;display:flex;align-items:center;gap:2rem}
-.wx-chip{display:inline-flex;align-items:center;gap:.45rem;height:2rem;padding:0 .8rem;border:1px solid currentColor;border-radius:2rem;font:500 .68rem/1 var(--f-head);text-transform:uppercase;letter-spacing:.08em;opacity:.9;transition:opacity .4s,background-color .4s}
+.wx-chip{display:none!important}
 .wx-chip:hover{opacity:1;background:rgba(255,255,255,.08)}
 .wx-chip b{font-weight:600}
 .wx-ico{display:inline-block;width:1.05rem;height:1.05rem}
