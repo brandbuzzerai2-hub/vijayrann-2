@@ -227,30 +227,101 @@
 
   /* ---------- DRAG RAILS (collection, experiences, gallery) ---------- */
   $$('[data-rail]').forEach(sec => {
-    const rail = $('.rail', sec), track = $('.rail-track', sec), items = $$('.ca-item', track);
+    const rail = $('.rail', sec), track = $('.rail-track', sec);
     if (!rail || !track) return;
+    
+    const isAuto = sec.dataset.autoScroll === 'true';
+    if (isAuto) {
+      track.innerHTML += track.innerHTML;
+    }
+    
+    const items = $$('.ca-item', track);
     const bar = $('.rail-bar i', sec), dots = $('.dots', sec);
     let max = 0;
     const measure = () => { max = Math.max(0, track.scrollWidth - rail.clientWidth); };
     measure();
     const upd = () => {
-      const x = gsap.getProperty(track, 'x'), p = max ? -x / max : 0;
+      const x = gsap.getProperty(track, 'x');
+      const baseSpan = isAuto ? (track.scrollWidth / 2) : max;
+      const p = baseSpan ? Math.abs(x % baseSpan) / baseSpan : 0;
       if (bar) gsap.set(bar, { left: `${p * 80}%` });
       if (dots) { const i = Math.round(p * (items.length - 1)); $$('button', dots).forEach((b, j) => b.classList.toggle('on', i === j)); }
     };
-    const drag = Draggable.create(track, { type: 'x', inertia: true, edgeResistance: .9, bounds: { minX: -max, maxX: 0 }, allowContextMenu: true, zIndexBoost: false,
+    const dragBounds = isAuto ? { minX: -track.scrollWidth + rail.clientWidth, maxX: 0 } : { minX: -max, maxX: 0 };
+    const drag = Draggable.create(track, { type: 'x', inertia: true, edgeResistance: isAuto ? 0.6 : 0.9, bounds: dragBounds, allowContextMenu: true, zIndexBoost: false,
       onDrag: upd, onThrowUpdate: upd, onPress() { this.startX = this.x; }, onClick() {} })[0];
     $$('a', track).forEach(a => a.addEventListener('click', e => { if (Math.abs(drag.x - (drag.startX ?? drag.x)) > 6) e.preventDefault(); }));
-    const go = x => { x = gsap.utils.clamp(-max, 0, x); gsap.to(track, { x, duration: 1.2, ease: 'power4.out', onUpdate: () => { drag.update(); upd(); } }); };
     const step = () => (items[0]?.offsetWidth || 400) + parseFloat(getComputedStyle(track).columnGap || 24);
+    const go = x => {
+      if (isAuto) {
+        const half = track.scrollWidth / 2;
+        if (x < -half) x += half;
+        if (x > 0) x -= half;
+      } else {
+        x = gsap.utils.clamp(-max, 0, x);
+      }
+      gsap.to(track, { x, duration: 1.2, ease: 'power4.out', onUpdate: () => { drag.update(); upd(); } });
+    };
     $('[data-prev]', sec)?.addEventListener('click', () => go(gsap.getProperty(track, 'x') + step()));
     $('[data-next]', sec)?.addEventListener('click', () => go(gsap.getProperty(track, 'x') - step()));
     if (dots) { dots.innerHTML = items.map((_, i) => `<button aria-label="Slide ${i + 1}"></button>`).join(''); $$('button', dots).forEach((b, i) => b.addEventListener('click', () => go(-Math.min(max, items[i].offsetLeft)))); }
     rail.tabIndex = 0; rail.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(gsap.getProperty(track, 'x') - step()); if (e.key === 'ArrowLeft') go(gsap.getProperty(track, 'x') + step()); });
-    addEventListener('resize', () => { measure(); drag.applyBounds({ minX: -max, maxX: 0 }); upd(); });
+    addEventListener('resize', () => { measure(); drag.applyBounds(isAuto ? { minX: -track.scrollWidth + rail.clientWidth, maxX: 0 } : { minX: -max, maxX: 0 }); upd(); });
     upd();
-    /* items rise into place as the section scrolls in (scrubbed) */
-    gsap.fromTo(items, { yPercent: 50 }, { yPercent: 0, ease: 'none', stagger: { each: .1 }, scrollTrigger: { trigger: sec, start: 'top center', end: 'bottom bottom', scrub: 1 } });
+
+    if (isAuto) {
+      let speed = 0.75;
+      let hovered = false;
+      let userInteracting = false;
+      let resumeTimer = null;
+      let inView = false;
+      
+      ScrollTrigger.create({
+        trigger: sec,
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter: () => inView = true,
+        onLeave: () => inView = false,
+        onEnterBack: () => inView = true,
+        onLeaveBack: () => inView = false
+      });
+      
+      const tick = () => {
+        if (!inView || hovered || userInteracting) return;
+        const half = track.scrollWidth / 2;
+        if (!half) return;
+        let cur = gsap.getProperty(track, 'x') - speed;
+        if (cur <= -half) cur += half;
+        gsap.set(track, { x: cur });
+        drag.update();
+        upd();
+      };
+      
+      gsap.ticker.add(tick);
+      
+      sec.addEventListener('mouseenter', () => { hovered = true; });
+      sec.addEventListener('mouseleave', () => { hovered = false; });
+      
+      const pauseAuto = () => {
+        userInteracting = true;
+        clearTimeout(resumeTimer);
+      };
+      const resumeAuto = () => {
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(() => { userInteracting = false; }, 2200);
+      };
+      
+      drag.addEventListener('press', pauseAuto);
+      drag.addEventListener('dragEnd', resumeAuto);
+      drag.addEventListener('throwComplete', resumeAuto);
+      $('[data-prev]', sec)?.addEventListener('click', () => { pauseAuto(); resumeAuto(); });
+      $('[data-next]', sec)?.addEventListener('click', () => { pauseAuto(); resumeAuto(); });
+      
+      gsap.fromTo(items, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, stagger: 0.04, ease: 'power3.out', scrollTrigger: { trigger: sec, start: 'top 85%', once: true } });
+    } else {
+      /* items rise into place as the section scrolls in (scrubbed) */
+      gsap.fromTo(items, { yPercent: 50 }, { yPercent: 0, ease: 'none', stagger: { each: .1 }, scrollTrigger: { trigger: sec, start: 'top center', end: 'bottom bottom', scrub: 1 } });
+    }
     $$('.ca-line', sec).forEach(l => gsap.fromTo(l, { scaleX: 0 }, { scaleX: 1, duration: 2, ease: 'power4.out', scrollTrigger: { trigger: l, start: 'top 95%', once: true } }));
   });
 

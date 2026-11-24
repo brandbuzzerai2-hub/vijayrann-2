@@ -187,8 +187,8 @@ def rail_ui(dots=False):
     if dots: return '<div class="dots"></div>'
     return f'<div class="rail-ui"><div class="rail-bar"><i></i></div><div class="rail-btns"><button data-prev aria-label="Previous">{ARR_L}</button><button data-next aria-label="Next">{ARR_R}</button></div></div>'
 
-def collection(title, text, cta, items, bg=""):
-    return (f'<section class="coll" data-rail{bg}><div class="coll-head"><div class="tx"><h2 class="t-s" data-split>{title}</h2><p class="p" data-split="text">{text}</p></div>{cta}</div>'
+def collection(title, text, cta, items, bg="", extra_attrs=""):
+    return (f'<section class="coll" data-rail{bg}{extra_attrs}><div class="coll-head"><div class="tx"><h2 class="t-s" data-split>{title}</h2><p class="p" data-split="text">{text}</p></div>{cta}</div>'
             f'<div class="rail"><div class="rail-track">{rail_items(items)}</div></div>{rail_ui()}</section>')
 
 def experiences(title, text, items):
@@ -263,6 +263,10 @@ def build():
       + story('A heritage palace <span class="soft">woven into</span> the Aravalli hills',
               "Royal Quest Resorts created The Vijayran Palace around a simple idea: luxury, world-class service and an atmosphere of solitude. It is where old-world vibes and a glorious past meet the new age, an amalgamation of culture, tradition and contemporary comfort.",
               btn("Discover our story", u("about-us-luxury-resort-of-jaipur"), "dark"), STORY_IMGS)
+      + collection("Activities & Experiences", "Choose your pace: guided morning yoga, horseback rides into the hills, folk music under the stars, or peaceful moments in our gardens and courtyards.",
+                   btn("Explore all activities", u("yoga-spa-pool-luxury-resort-jaipur-rajasthan")),
+                   [{"img": p, "title": t, "text": d, "slug": "yoga-spa-pool-luxury-resort-jaipur-rajasthan"} for t, p, d in EXPERIENCES],
+                   extra_attrs=' data-auto-scroll="true"')
       + itinerary('Discover the <span class="soft">royal heritage</span> of Jaipur from our doorstep.',
                   "Amber Fort is about 12 km away and the walled Pink City around 19 km. Hawa Mahal, City Palace, Jal Mahal and the cenotaphs of Gaitore are all within easy reach, with fairytale palaces, colourful temples and splendid havelis to explore before returning to the calm of the palace.",
                   btn("Explore", u("top-holiday-resort-in-jaipur-for-family"), "line")))
