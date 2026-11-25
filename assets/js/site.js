@@ -356,9 +356,56 @@
       .fromTo(img, { scale: 1.25 }, { scale: 1, duration: 2.2, ease: 'power3.out' }, 0);
   });
   $$('[data-fade]').forEach(el => gsap.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.6, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true } }));
-  $$('.sk path, .sk circle').forEach(p => {
-    try { const L = p.getTotalLength(); gsap.fromTo(p, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg'), start: 'top 85%', once: true } }); } catch (_) {}
-  });
+  /* ---------- ROYAL ARCHITECTURAL SKETCH SHAPE-UP WITH SCROLL ---------- */
+  const skWrap = $('.sk-wrap');
+  if (skWrap && hasGsap && !reduce) {
+    const strokes = $$('.sk-p', skWrap);
+    const sun = $('.sk-p-sun', skWrap);
+    const full = $('.sk-p-full', skWrap);
+
+    strokes.forEach(p => {
+      try {
+        const len = p.getTotalLength();
+        gsap.set(p, { strokeDasharray: len + 4, strokeDashoffset: len + 4 });
+      } catch (_) {}
+    });
+
+    if (sun) gsap.set(sun, { scale: 0, transformOrigin: '475px 120px' });
+    if (full) gsap.set(full, { opacity: 0 });
+    gsap.set(skWrap, { opacity: 0.35, y: 30, scale: 0.96 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: skWrap,
+        start: 'top 92%',
+        end: 'bottom 55%',
+        scrub: 1.2,
+        invalidateOnRefresh: true
+      }
+    });
+
+    // 1. Base steps & lotus pool draw in
+    tl.to('.sk-p1, .sk-p2', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0);
+    tl.to(skWrap, { opacity: 1, y: 0, scale: 1, ease: 'power2.out', duration: 0.8 }, 0);
+
+    // 2. Ceremonial Gateway and Royal Elephant draw in
+    tl.to('.sk-p3, .sk-p4', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.15);
+    tl.to('.sk-p5, .sk-p6, .sk-p7', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.2);
+
+    // 3. Galloping Marwari horses and side wings/chattris draw in
+    tl.to('.sk-p8, .sk-p9, .sk-p10', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.35);
+    tl.to('.sk-p11, .sk-p12', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.4);
+
+    // 4. Upper 5-arch Baradari and Aravalli hills draw in
+    tl.to('.sk-p13, .sk-p14', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.55);
+    tl.to('.sk-p15, .sk-p16', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.6);
+
+    // 5. Royal Surya Sun crest expands at the peak
+    if (sun) tl.to(sun, { scale: 1, ease: 'back.out(1.4)', duration: 0.35 }, 0.7);
+
+    // 6. Complete unmasking so all fine details and cross-hatching are 100% visible
+    if (full) tl.to(full, { opacity: 1, ease: 'power1.out', duration: 0.25 }, 0.85);
+  }
 
   /* Clear any legacy font preset overrides to enforce Libre Caslon Display */
   try { localStorage.removeItem('vj-font-preset'); } catch (_) {}

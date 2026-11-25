@@ -3,6 +3,7 @@
 python3 build.py  ->  ./dist   (every page keeps its existing royalquestresorts.com URL)"""
 import os, shutil, html, json
 from data import *
+from gen_sketch_svg import get_sketch_svg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = OUT = os.path.dirname(HERE)          # pages are written to the repository root (the deployable site)
@@ -160,6 +161,13 @@ def page(path, title, desc, body, light=False, schema=None):
 {ld}
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px;overflow:hidden;" aria-hidden="true">
+  <defs>
+    <clipPath id="mehrabClip" clipPathUnits="objectBoundingBox">
+      <path d="M 0 1 L 1 1 L 1 0.40 C 1 0.32, 0.93 0.26, 0.86 0.26 C 0.86 0.19, 0.77 0.13, 0.68 0.13 C 0.68 0.07, 0.58 0.02, 0.50 0.00 C 0.42 0.02, 0.32 0.07, 0.32 0.13 C 0.23 0.13, 0.14 0.19, 0.14 0.26 C 0.07 0.26, 0 0.32, 0 0.40 Z" />
+    </clipPath>
+  </defs>
+</svg>
 {nav(light)}
 <main id="main">
 {body}
@@ -191,9 +199,12 @@ def hero(media, title, label="", video=None):
           '<p class="wx-desc"><span data-wx="desc"></span> · <span data-wx="hilo"></span></p><p class="wx-time"><span data-wx="time"></span> IST · Kukas, Jaipur</p></aside>') if video else ""
     return f'<section class="hero"><div class="hero-media">{m}</div><div class="hero-cap">{lab}<h1 class="t-hero" data-split="hero">{title}</h1></div>{wx}{snd}</section>'
 
+def sketch_markup():
+    return f'<div class="sk-wrap" aria-label="Architectural engraving of The Vijayran Palace">{get_sketch_svg(P.R)}</div>'
+
 def intro(title_html, text, tpl=False, sketch=True, ornament=True):
     t = f'<h2 class="{"h-xl" if tpl else "t-xl"}" data-split>{title_html}</h2>'
-    sk = SKETCH if sketch else "<span></span>"
+    sk = sketch_markup() if sketch else "<span></span>"
     return (f'<div class="intro-wrap"><section class="intro{" c-tpl" if tpl else ""}">{ORN if ornament and tpl else ""}<div class="intro-title">{t}</div>'
             f'<div class="intro-row"><div class="p-l" data-split="text">{text}</div><span></span>{sk}</div></section></div>')
 
@@ -282,8 +293,8 @@ def wedding_home():
             "name": "Rang Mahal",
             "tag": "400–500 Guests",
             "setting": "Heritage Amphitheatre & Lawns",
-            "img": "2021/06/g4.jpg",
-            "desc": "Featuring a permanent heritage jharokha stage and manicured royal gardens. Ideal for sangeet spectacles, musical nights, and grand varmala ceremonies.",
+            "img": "2021/06/g5.jpg",
+            "desc": "Featuring an illuminated heritage jharokha stage and manicured royal gardens under the starlit sky. Ideal for sangeet spectacles, musical nights, and grand varmala ceremonies.",
             "highlights": ["Inbuilt architectural stone stage", "Acoustically tuned garden setting", "Dedicated cocktail pavilions & gazebos"]
         },
         {
@@ -313,7 +324,8 @@ def wedding_home():
                        f'data-title="{v["name"]}" data-tag="{v["tag"]}" data-setting="{v["setting"]}" data-desc="{v["desc"]}" '
                        f'data-hl1="{v["highlights"][0]}" data-hl2="{v["highlights"][1]}" data-hl3="{v["highlights"][2]}">'
                        f'<div class="hw-vcard-thumb"><img src="{P.R}media/wp-content/uploads/{v["img"]}" alt="{v["name"]}" loading="lazy"></div>'
-                       f'<div class="hw-vcard-text"><h4>{v["name"]}</h4><p>{v["tag"]} · {v["setting"]}</p></div></div>')
+                       f'<div class="hw-vcard-text"><h4>{v["name"]}</h4><p>{v["tag"]} · {v["setting"]}</p></div>'
+                       f'<div class="hw-vcard-arr"><svg viewBox="0 0 8 12" width="8" height="12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 1.5l4.5 4.5-4.5 4.5"/></svg></div></div>')
 
     v0 = venues[0]
     return f"""<section class="home-wedding" id="weddings">
