@@ -135,19 +135,19 @@
 
   gsap.registerPlugin(ScrollTrigger, SplitText, Draggable, InertiaPlugin);
 
-  /* ---------- Lenis smooth scroll + scroll-velocity card physics ---------- */
+  /* ---------- Lenis smooth scroll + linear sliding card physics (no tilt) ---------- */
   let lenis = null;
   if (typeof Lenis !== 'undefined') {
     lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
-    let curSkew = 0, targetSkew = 0;
-    lenis.on('scroll', ({ velocity }) => { targetSkew = gsap.utils.clamp(-1.8, 1.8, velocity * 0.05); });
+    let curSlide = 0, targetSlide = 0;
+    lenis.on('scroll', ({ velocity }) => { targetSlide = gsap.utils.clamp(-14, 14, velocity * -0.32); });
     gsap.ticker.add(t => {
       lenis.raf(t * 1000);
-      targetSkew *= 0.9;
-      curSkew += (targetSkew - curSkew) * 0.16;
-      if (Math.abs(curSkew) > 0.005) document.documentElement.style.setProperty('--vj-skew', `${curSkew.toFixed(3)}deg`);
-      else if (curSkew !== 0) { curSkew = 0; document.documentElement.style.setProperty('--vj-skew', '0deg'); }
+      targetSlide *= 0.88;
+      curSlide += (targetSlide - curSlide) * 0.16;
+      if (Math.abs(curSlide) > 0.05) document.documentElement.style.setProperty('--vj-slide', `${curSlide.toFixed(2)}px`);
+      else if (curSlide !== 0) { curSlide = 0; document.documentElement.style.setProperty('--vj-slide', '0px'); }
     });
     gsap.ticker.lagSmoothing(0);
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const t = $(a.getAttribute('href')); if (t) { e.preventDefault(); lenis.scrollTo(t, { offset: -80 }); } }));
@@ -386,22 +386,22 @@
       sec.addEventListener('mouseleave', () => { hovered = false; });
     }
 
-    /* Scroll-scrubbed card cascade, horizontal rail glide & inner window image parallax */
+    /* Scroll-scrubbed pure sliding card cascade, horizontal rail slide & inner image glide */
     gsap.fromTo(items,
-      { y: i => 60 + (i % 4) * 26, scale: 0.92, opacity: 0.35 },
-      { y: 0, scale: 1, opacity: 1, ease: 'power2.out',
+      { x: i => 56 + (i % 4) * 24, y: i => 24 + (i % 4) * 14, opacity: 0.25 },
+      { x: 0, y: 0, opacity: 1, ease: 'power2.out',
         scrollTrigger: { trigger: sec, start: 'top 95%', end: 'top 28%', scrub: 0.85 } }
     );
     gsap.fromTo(rail,
-      { xPercent: 4.5 },
-      { xPercent: -4.5, ease: 'none',
+      { xPercent: 5.5 },
+      { xPercent: -5.5, ease: 'none',
         scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.9 } }
     );
     const cardImgs = $$('.ca-item .im img', track);
     if (cardImgs.length) {
       gsap.fromTo(cardImgs,
-        { scale: 1.22, yPercent: -13 },
-        { scale: 1.06, yPercent: 13, ease: 'none',
+        { scale: 1.18, xPercent: 4, yPercent: -10 },
+        { scale: 1.08, xPercent: -4, yPercent: 10, ease: 'none',
           scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.6 } }
       );
     }
@@ -601,7 +601,7 @@
     $$('.footer').forEach(f => {
       const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: 'top 92%', end: 'top 38%', scrub: 0.8 } });
       const crest = $('.f-crest', f), word = $('.f-word', f);
-      if (crest) tl.from(crest, { opacity: 0, scale: .72, rotate: -8, duration: 1 });
+      if (crest) tl.from(crest, { opacity: 0, y: 20, scale: .88, duration: 1 });
       if (word) tl.from(word, { opacity: 0, x: -28, duration: 0.9 }, '-=.7');
       tl.from($$('.f-badges > *', f), { opacity: 0, y: 20, duration: 0.8, stagger: .1 }, '-=.6')
         .from($$('.f-grid > div', f), { opacity: 0, y: 36, duration: 1, stagger: .14 }, '-=.5');
@@ -808,7 +808,7 @@
   })();
 
   /* ==========================================================================
-     3D MAGNETIC TILT MOTION ([data-tilt])
+     SUBTLE LINEAR SLIDING HOVER ([data-tilt] — no rotational tilt)
      ========================================================================== */
   (() => {
     if (reduce) return;
@@ -821,13 +821,13 @@
         const y = e.clientY - rect.top;
         const cx = rect.width / 2;
         const cy = rect.height / 2;
-        const rotX = ((y - cy) / cy) * -6;
-        const rotY = ((x - cx) / cx) * 6;
-        el.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
+        const dx = ((x - cx) / cx) * 8;
+        const dy = ((y - cy) / cy) * 6;
+        el.style.transform = `translate3d(${dx.toFixed(2)}px, ${dy.toFixed(2)}px, 0)`;
       };
       const onLeave = () => {
         rect = null;
-        el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        el.style.transform = 'translate3d(0, 0, 0)';
       };
       el.addEventListener('mouseenter', () => { rect = el.getBoundingClientRect(); });
       el.addEventListener('mousemove', onMove);
@@ -1135,7 +1135,7 @@
       });
     }
 
-    // 3D Parallax Tilt for Map Card on Mouse/Touch Movement
+    // Subtle Flat Sliding Motion for Map Card on Mouse/Touch Movement (no tilt)
     if (stage && mapCard && !reduce) {
       let rect = null;
       stage.addEventListener('mouseenter', () => { rect = stage.getBoundingClientRect(); });
@@ -1143,11 +1143,11 @@
         if (!rect) rect = stage.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        mapCard.style.transform = `rotateX(${(6 - y * 12).toFixed(2)}deg) rotateY(${(-0.5 + x * 14).toFixed(2)}deg) translateZ(8px)`;
+        mapCard.style.transform = `translate3d(${(x * 12).toFixed(2)}px, ${(y * 8).toFixed(2)}px, 0)`;
       });
       stage.addEventListener('mouseleave', () => {
         rect = null;
-        mapCard.style.transform = `rotateX(6deg) rotateY(-0.5deg) translateZ(0px)`;
+        mapCard.style.transform = 'translate3d(0, 0, 0)';
       });
     }
 

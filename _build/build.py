@@ -1125,15 +1125,15 @@ def ms_trail(verse, note, flip=False):
 
 def royal_stroll_section():
     kos_milestones = [
-        ("30 km", "10 Royal Kos South", "Jaipur Airport · Sanganer", "Southern aerial & highway gateway to the princely state of Jaipur"),
-        ("22 km", "7.5 Kos South", "Birla Marble Mandir", "Gleaming white marble shrine beneath Moti Dungri hill"),
-        ("19 km", "6.5 Kos South", "Hawa Mahal & Pink City", "Five-storey terracotta Crown of Winds & vibrant Johari bazaars"),
-        ("19 km", "6.5 Kos South", "City Palace & Chandra Mahal", "Royal court of the Kachhwaha Maharajas & Jantar Mantar"),
-        ("16 km", "5.5 Kos South", "Gaitore Royal Cenotaphs", "Hand-carved marble chhatris of Jaipur's kings in a quiet valley"),
-        ("15 km", "5 Kos · Aravalli Crest", "Nahargarh & Jaigarh Forts", "Twin mountain citadels standing watch along the folded ridge"),
-        ("15 km", "5 Kos South", "Jal Mahal · Man Sagar Lake", "The floating sandstone pleasure palace mirrored in turquoise waters"),
-        ("12 km", "4 Kos South", "Historic Amber Fort (Amer)", "Ancestral stronghold of Sheesh Mahal, Ganesh Pol & Maota Lake"),
-        ("0 km", "Sanctuary Reached", "The Vijayran Palace · Kukas", "Cradled in the emerald Aravalli amphitheatre off the royal Amer pass"),
+        ("12 km", "4 Kos South", "Amber Fort (Amer)", "Inspires our Gajdwar elephant portal, Suraj Pol forecourt symmetry & vaulted durbar halls"),
+        ("15 km", "5 Kos South", "Jal Mahal · Man Sagar Lake", "Inspires Ambar Taal's pillared marble baradari arches & serene turquoise reflections"),
+        ("15 km", "5 Kos · Aravalli Crest", "Nahargarh & Jaigarh Forts", "Inspire our Aravalli rooftop parapets, octagonal burj towers & walled hilltop privacy"),
+        ("16 km", "5.5 Kos South", "Gaitore Royal Cenotaphs", "Inspires the ribbed yellow-sandstone chhatri cupolas & projecting chhajja eaves"),
+        ("19 km", "6.5 Kos South", "Hawa Mahal · Pink City", "Inspires the hand-carved jaali lattices & cantilevered jharokhas of our upper suites"),
+        ("19 km", "6.5 Kos South", "City Palace & Pitam Niwas", "Inspires Haveli Chowk, the four-quartered Char Bagh fountains & floral aaraish frescoes"),
+        ("22 km", "7.5 Kos South", "Birla Marble Mandir", "White Makrana marble artistry reflected in our lotus fountains & cool carved steps"),
+        ("30 km", "10 Royal Kos South", "Jaipur Airport · Sanganer", "Direct highway arrival bringing guests from Sanganer to Kukas along NH-8"),
+        ("0 km", "The Living Synthesis", "The Vijayran Palace · Kukas", "Every classic Jaipur motif woven into 35 private-pool villas & haveli suites"),
     ]
 
     kos_html = "".join(
@@ -1149,104 +1149,105 @@ def royal_stroll_section():
 
     chapters = [
         {
-            "khand": "Khand II &middot; The Northern Threshold of Kukas",
-            "title": "Gajdwar &mdash; The Portal of Elephants &amp; Suryavanshi Forecourt",
-            "rubric": "Where nagada kettle-drums thunder and the lotus channel reflects twin domes",
+            "khand": "Architectural Pillar I &middot; Inspired by Amber’s Ganesh Pol &amp; Gaitore",
+            "title": "Gajdwar Portal, Octagonal Burj Towers <span class=\"soft\">&amp;</span> Ribbed Chhatris",
+            "rubric": "From Amer's royal fortress gates and Gaitore cenotaphs to our yellow-sandstone forecourt",
             "painting": f"{P.R}assets/img/scroll/02-gajdwar-arrival.webp",
-            "paint_alt": "Hand-painted Jaipur miniature of Gajdwar elephant portal, nagada drummers and lotus water channel at The Vijayran Palace",
+            "paint_alt": "Hand-painted Jaipur miniature illustrating how Gajdwar portal, ribbed chhatri domes and axial lotus channel echo Amer and Gaitore",
             "p1": (
-                "Twelve kilometres north of Amber Fort, where the ancient Aravalli hills curve into a hushed green amphitheatre at Kukas, the Maharaja's road arrives beneath Gajdwar—the monumental yellow-sandstone Portal of Elephants. "
-                "Up in the arched naqqarkhana gallery above the gate, musicians strike deep nagada kettle-drums and blow silver-rimmed trumpets while crimson rose petals rain down upon arriving carriages and caparisoned elephants."
+                "Stand before Gajdwar and you immediately recognise the regal silhouette of <em>Amber Fort’s</em> Suraj Pol and Ganesh Pol twelve kilometres south. "
+                "Built in hand-dressed Khatu and Dholpur yellow sandstone by hereditary Rajasthani silavats, our monumental arrival gate rises with a soaring cusped mehrab arch and upper <em>naqqarkhana</em> gallery where nagada kettle-drums announce guests beneath a shower of rose petals."
             ),
             "p2": (
-                "Passing under the soaring cusped mehrab arch unveils the full Suryavanshi symmetry of The Vijayran Palace: twin octagonal corner towers crowned with ribbed chhatri cupolas, deep stone chhajja eaves engineered to tame the Rajasthan noon, and a tranquil Mughal water parterre blooming with pink lotuses between rows of slender cypress."
+                "Flanking the symmetric palace facade beyond the gate, twin octagonal corner bastions rise into fluted <em>chhatri</em> cupolas—echoing the carved royal cenotaphs of <em>Gaitore</em> (16 km south)—while deep projecting <em>chhajja</em> stone eaves shade the lime-plastered arcades above an axial Mughal lotus channel."
             ),
             "callouts": [
-                ("Architecture", "Khatu &amp; Dholpur yellow sandstone dressed by hereditary Rajasthani silavats"),
-                ("Ceremony", "Traditional tilak, aarti, nagada drum &amp; rose-petal royal welcome"),
-                ("Sanctuary Scale", "35 palatial haveli suites &amp; private-pool villas set across quiet gardens"),
+                ("Historic Blueprint", "<em>Amber Fort (12 km)</em> monumental elephant gates &amp; <em>Gaitore (16 km)</em> fluted chhatris"),
+                ("Living Craft", "Hand-dressed Khatu sandstone blocks, cusped mehrab arches &amp; axial lotus parterre"),
+                ("On the Estate", "Frames the welcoming forecourt leading into all 35 villas, suites &amp; courtyards"),
             ],
             "peep_img": "2021/06/Main-Gate.jpg",
-            "peep_cap": "The living sandstone Gajdwar gate at Kukas today",
+            "peep_cap": "Gajdwar's sculpted sandstone portal standing at Kukas today",
             "trail_after": (
-                "Step off the sunlit forecourt terrace and turn beneath a cool scalloped arch—where bright desert gold softens into lime-plastered shade and the gentle murmur of marble water.",
-                "Thirty Paces Inward · Entering the Aangans",
+                "Just as Jaipur's builders moved from fortress gateways into secluded climate-cooled courts, step inward beneath our scalloped arches to discover how Hawa Mahal and City Palace live on inside every courtyard.",
+                "From Fortress Gateway · To Cool Courtyard Architecture",
             ),
             "reverse": False,
         },
         {
-            "khand": "Khand III &middot; The Inner Haveli Aangans",
-            "title": "Char Bagh Lotus Fountain, Haveli Chowk &amp; Stone-Lace Jharokhas",
-            "rubric": "Peacocks along the chhajja eaves and mountain breezes spun through carved jaali",
+            "khand": "Architectural Pillar II &middot; Inspired by Hawa Mahal &amp; City Palace Chowks",
+            "title": "Char Bagh Fountains, Haveli Chowk <span class=\"soft\">&amp;</span> Pierced Jharokha Galleries",
+            "rubric": "Passive desert cooling, wind-catching jaali lacework &amp; four-quartered royal gardens",
             "painting": f"{P.R}assets/img/scroll/03-charbagh-haveli.webp",
-            "paint_alt": "Hand-painted Jaipur miniature of saffron sandstone Haveli Chowk, Char Bagh marble lotus fountain, jharokhas and peacocks",
+            "paint_alt": "Hand-painted Jaipur miniature showing Char Bagh marble lotus fountain, pierced jaali screens and carved sandstone jharokha balconies",
             "p1": (
-                "Inside the palace walls, cool stone-flagged corridors open into sky-lit courtyards modeled on the royal havelis of Rajputana: Haveli Chowk and the four-quartered Char Bagh garden. "
-                "At the crossing of four marble water rills, a hand-carved white lotus fountain murmurs day and night amid white frangipani blossoms, hosting intimate Mehendi and Haldi gatherings of 100 to 250 guests."
+                "Crossing into the heart of The Vijayran Palace reveals an architecture sculpted around climate and serenity—drawing directly from the nested courtyards of <em>City Palace</em> (19 km south) and the 953 wind-catching <em>jharokhas</em> of iconic <em>Hawa Mahal</em>. "
+                "Four-quartered <em>Char Bagh</em> parterres and open <em>Haveli Chowk</em> plazas orient every breeze around a murmuring white-marble lotus fountain."
             ),
             "p2": (
-                "Raise your eyes to the upper storeys where peacocks rest along the warm sandstone parapets. Cantilevered jharokha balconies and pierced geometric jaali lattices overhang the square—filtering bright sun into lacework while cooling the expansive 1,345 sq ft Courtyard Haveli Suites, 800 sq ft Balcony Suites, 600 sq ft Jharokha Suites and 450 sq ft Haveli Rooms."
+                "Overhead, cantilevered sandstone <em>jharokhas</em> and pierced geometric <em>jaali</em> lattices soften fierce desert glare into cool lacework—creating natural cross-ventilation through our 1,345 sq ft Courtyard Haveli Suites, 800 sq ft Balcony Suites, 600 sq ft Jharoka Suites and 450 sq ft Haveli Rooms while giving couples and wedding guests timelessly framed portraits."
             ),
             "callouts": [
-                ("Char Bagh &amp; Chowk", "Four-quartered Mughal fountain garden for 100–250 royal guests"),
-                ("Pierced Stone Craft", "Hand-carved jharokha balconies &amp; geometric jaali wind-screens"),
-                ("Haveli Residences", "Courtyard, Balcony &amp; Jharokha suites opening onto private aangans"),
+                ("Historic Blueprint", "<em>Hawa Mahal (19 km)</em> pierced jaali wind-screens &amp; <em>City Palace (19 km)</em> chowks"),
+                ("Living Craft", "Four-quartered Char Bagh fountain square, blooming frangipani &amp; peacock parapets"),
+                ("On the Estate", "Hosts intimate 100–250 guest Mehendi &amp; Haldi courts plus private suite aangans"),
             ],
             "peep_img": "2021/06/g4.jpg",
-            "peep_cap": "Saffron sandstone arcades &amp; jharokhas framing the inner chowk",
+            "peep_cap": "Hand-carved jharokhas &amp; saffron arcades above Haveli Chowk",
             "trail_after": (
-                "Follow the warm fragrance of roasted cloves, saffron and woodsmoke through brass-studded teakwood doors into the painted durbar chambers—and onward to the lantern-lit garden stage.",
-                "Through the Vaulted Durbar to the Eastern Arcade",
+                "Beyond the sky-lit aangans lie the formal reception chambers—where Jaipur's traditions of hand-painted botanical frescoes and royal courtly patronage come alive.",
+                "From Carved Stone Lace · To Painted Durbar Vaults",
             ),
             "reverse": True,
         },
         {
-            "khand": "Khand IV &middot; Royal Dastarkhwan &amp; Living Arts",
-            "title": "Swarn Mahal Feasts, Raj Mahal Durbar &amp; Rang Mahal Nights",
-            "rubric": "Heirloom recipes by candlelight and whirling Kalbeliya skirts to the bowed Ravanahatha",
+            "khand": "Architectural Pillar III &middot; Inspired by Amer’s Diwan-i-Khas &amp; Court Patronage",
+            "title": "Raj Mahal Durbar Frescoes, Swarn Mahal <span class=\"soft\">&amp;</span> Rang Mahal Stage",
+            "rubric": "Aaraish lime plaster, floral fresco vaults &amp; heritage amphitheatres under lantern light",
             "painting": f"{P.R}assets/img/scroll/04-durbar-rangmahal.webp",
-            "paint_alt": "Hand-painted Jaipur miniature showing floral-frescoed Swarn and Raj Mahal banquet hall flowing into Rang Mahal folk dance courtyard",
+            "paint_alt": "Hand-painted Jaipur miniature showing floral frescoed Raj Mahal durbar dining hall opening into the Rang Mahal folk amphitheatre",
             "p1": (
-                "At the ceremonial heart of the scroll lie Raj Mahal—our grand tapestry banquet hall welcoming 250 to 300 guests beneath crystal chandeliers and hand-painted floral vaults—and Swarn Mahal, the palace dining salon. "
-                "Here our Executive Chef revives guarded recipes of Mewar, Marwar and Awadh alongside global classics, harvesting crisp herbs and seasonal vegetables each dawn from the palace's own organic kitchen gardens."
+                "Stepping inside <em>Raj Mahal</em> and <em>Swarn Mahal</em> recalls the glittering reception chambers and mirror-lit vaults of Amer’s <em>Diwan-i-Khas</em> and City Palace’s painted arches. "
+                "Hand-painted floral borders, rich Rajputana tapestries and cusped plaster vaults warm our grand banquet hall for 250–300 guests alongside Swarn Mahal, where royal Mewari and Awadhi recipes meet organic herbs from our own kitchen gardens."
             ),
             "p2": (
-                "Stepping eastward through cusped sandstone colonnades brings you to Rang Mahal, an open-air heritage amphitheatre for 400 to 500 guests. By day, hushed suites along this wing house the Rang Mahal Spa for restorative sixty-minute Ayurvedic therapies; at dusk, rows of brass diyas awaken as folk musicians play the ancient Ravanahatha and Ghoomar and Kalbeliya dancers spin beneath the moon."
+                "Outward through eastern stone colonnades rises <em>Rang Mahal</em>—an open-air sandstone heritage amphitheatre for 400–500 guests inspired by the royal <em>Gunijankhana</em> guild of Jaipur musicians and dancers. "
+                "Quiet wings nearby shelter 60-minute Ayurvedic rituals at the Rang Mahal Spa by day, while brass diyas awaken after sunset for bowed Ravanahatha ballads, Kalbeliya and Ghoomar."
             ),
             "callouts": [
-                ("Swarn &amp; Raj Mahal", "Painted durbar banquet (250–300 guests) &amp; organic garden gastronomy"),
-                ("Rang Mahal Stage", "Open-air sandstone heritage amphitheatre for 400–500 guests"),
-                ("Spa &amp; Folk Arts", "60-minute Ayurvedic wellness by day; Ravanahatha &amp; Ghoomar by starlight"),
+                ("Historic Blueprint", "Amer’s <em>Diwan-i-Khas</em> vaulted fresco halls &amp; royal <em>Gunijankhana</em> court stages"),
+                ("Living Craft", "Mineral-pigment floral arches, chandeliers, tapestry walls &amp; tiered sandstone stage"),
+                ("On the Estate", "Raj Mahal (300 guests), Rang Mahal (500 guests), Swarn Mahal &amp; Rang Mahal Spa"),
             ],
             "peep_img": "2021/06/g2.jpg",
-            "peep_cap": "Tapestry arches &amp; chandeliers inside Raj Mahal",
+            "peep_cap": "Painted arches, tapestries &amp; chandeliers inside Raj Mahal",
             "trail_after": (
-                "One final winding path leads past bougainvillea-draped garden walls to secluded plunge-pool estates, turquoise sky-waters, spirited Marwari stables and the grand lamp-lit palace lawn.",
-                "Outward to the Valley Rim &amp; Starlit Horizon",
+                "Turning from painted durbar walls toward the open Aravalli ridge reveals how Jaipur's lakeside pleasure pavilions and hilltop zenana retreats shaped our waters and private pool villas.",
+                "From Painted Halls · To Lakeside Baradaris &amp; Hill Parapets",
             ),
             "reverse": False,
         },
         {
-            "khand": "Khand V &middot; Waters of the Sky &amp; Starlit Finale",
-            "title": "Presidential Pool Enclaves, Ambar Taal, Marwari Trails &amp; Mahal Bagh",
-            "rubric": "Turquoise baradari reflections at dusk and a hundred golden lamps across the Aravallis",
+            "khand": "Architectural Pillar IV &middot; Inspired by Jal Mahal &amp; Nahargarh Hilltop Retreats",
+            "title": "Ambar Taal Water Pavilion, Private Pool Villas <span class=\"soft\">&amp;</span> Mahal Bagh",
+            "rubric": "Man Sagar baradari reflections, secluded hilltop estates &amp; starlit celebratory lawns",
             "painting": f"{P.R}assets/img/scroll/05-ambartaal-mahalbagh.webp",
-            "paint_alt": "Hand-painted Jaipur miniature of Ambar Taal marble baradari pool, private pool villas, Marwari horses in Aravalli hills and illuminated palace lawn",
+            "paint_alt": "Hand-painted Jaipur miniature illustrating how Jal Mahal baradaris and Nahargarh mountain retreats inspire Ambar Taal, Presidential Villas and Mahal Bagh",
             "p1": (
-                "Along the quiet western sanctuary stand five walled Presidential Villas—private royal estates each enclosing its own manicured garden and shimmering plunge pool—beneath elevated Terrace Haveli Suites gazing straight across India's oldest mountain range. "
-                "Just below, white marble baradari arches frame the turquoise stillness of Ambar Taal, where morning swims give way to artisanal high tea and rose-strewn candlelit dinners beside the water."
+                "Along the valley rim, pillared white-marble <em>baradari</em> pavilions frame <em>Ambar Taal</em>—our signature infinity pool sculpted after the floating sandstone grace of <em>Jal Mahal</em> on Man Sagar Lake (15 km south). "
+                "Above and beside it, five walled <em>Presidential Villas</em> with private plunge pools and elevated <em>Terrace Haveli Suites</em> translate the secluded hilltop quarters of <em>Nahargarh Fort</em> into serene sanctuaries overlooking unbroken Aravalli crags."
             ),
             "p2": (
-                "Where the gardens meet the foothills, noble sickle-eared Marwari horses, camels and safari jeeps set out along khejri-shaded trails alive with over 150 species of native birds. "
-                "Finally, step onto the vast emerald carpet of Vijayran Mahal Bagh—capable of hosting 1,500 wedding guests under open skies—and look back as a hundred golden lamps set every dome, arch and jharokha of The Vijayran Palace aglow against the indigo Rajasthan night."
+                "Stretching across the palace threshold lies the grand emerald amphitheatre of <em>Vijayran Mahal Bagh</em>—conceived for royal celebrations of 1,000 to 1,500 guests beside our Marwari equestrian stables. "
+                "As twilight settles behind Kukas, hundreds of golden lamps trace every dome, arch and carved parapet along the facade, completing a living tribute to Jaipur's golden architectural age."
             ),
             "callouts": [
-                ("Private Pool Enclaves", "5 walled Presidential Villas with private plunge pools &amp; sunset terraces"),
-                ("Ambar Taal &amp; Trails", "Infinity sky-pool, Marwari horse safaris, cycling &amp; 150+ bird species"),
-                ("Vijayran Mahal Bagh", "Grand emerald palace front lawn welcoming 1,000–1,500 royal guests"),
+                ("Historic Blueprint", "<em>Jal Mahal (15 km)</em> floating baradaris &amp; <em>Nahargarh (15 km)</em> ridge-top private suites"),
+                ("Living Craft", "Marble pool pavilions, walled garden plunges &amp; sweeping illuminated parade lawns"),
+                ("On the Estate", "5 Private-Pool Presidential Villas, Ambar Taal, Stables &amp; 1,500-guest Mahal Bagh"),
             ],
             "peep_img": "2021/06/ambertallpool-img.jpg",
-            "peep_cap": "Ambar Taal mirroring the Aravalli hills at Kukas",
+            "peep_cap": "Ambar Taal mirroring the Aravalli sky at The Vijayran Palace",
             "trail_after": None,
             "reverse": True,
         },
@@ -1303,66 +1304,65 @@ def royal_stroll_section():
       <div class="ms-hashiya ms-hashiya-r" aria-hidden="true"></div>
 
       <div class="ms-inner">
-        <!-- ROYAL FARMAN INVOCATION & UNROLLING HEADER -->
+        <!-- HERITAGE ARCHITECTURAL SCROLL HEADER -->
         <header class="ms-header">
           <div class="ms-seal-top">{SURYA_SEAL_SVG}</div>
-          <p class="ms-invocation">Shahi Chitramala &middot; Royal Painted Scroll of Jaipur &amp; Kukas</p>
-          <h1 class="ms-main-title">The Maharaja’s Stroll <span class="soft">from the Pink City to</span> Vijayran</h1>
+          <h1 class="ms-main-title">Born of <span class="soft">Old Jaipur’s</span> Timeless Architecture</h1>
           <div class="ms-orn-crimson">{ORN}</div>
           <p class="ms-preamble">
-            In the royal courts of Rajasthan, when a Maharaja rode north from his capital to inspect his mountain pleasure-palace, court painters (<em>chiteras</em>) recorded every league, fort, lake, gateway and courtyard in mineral pigments and gold leaf upon handmade <em>wasli</em> parchment. Unroll this painted chronicle to follow the ancient royal route out of Jaipur—past every sentinel fort and water palace—and walk chamber by chamber through the complete living story of <strong>The Vijayran Palace</strong> at Kukas.
+            Every archway, carved balcony, frescoed banquet hall and water pavilion at <strong>The Vijayran Palace</strong> is an architectural love letter to historic Jaipur. Just as the royal master-builders (<em>silavats</em>) and court painters (<em>chiteras</em>) of Amber and the Pink City shaped stone, shade and reflection across the Aravallis, unroll this painted chronicle to discover how the great forts and palaces within a short drive of Kukas directly inspired every corner of our estate.
           </p>
         </header>
 
-        <!-- KHAND I: HAND-PAINTED CAVALCADE FROM PINK CITY TO AMER & KOS MINAR DISTANCES -->
+        <!-- ARCHITECTURAL LINEAGE & FORT DISTANCES FROM THE PALACE -->
         <section class="ms-chapter ms-route-chapter" data-ms-chapter>
           <header class="ms-ch-head">
-            <p class="ms-khand">Khand I &middot; The Royal Cavalcade Northward from Jaipur</p>
-            <h2 class="ms-ch-title">From Hawa Mahal &amp; Jal Mahal <span class="soft">past</span> Amber Fort to Kukas</h2>
-            <p class="ms-ch-rubric">Every fort, temple and royal cenotaph measured in leagues along the Aravalli pass</p>
+            <p class="ms-khand">Architectural Lineage &middot; Our Ancestral Inspirations Across Jaipur</p>
+            <h2 class="ms-ch-title">How <span class="soft">Amber, Jal Mahal &amp; Hawa Mahal</span> Live Inside Vijayran</h2>
+            <p class="ms-ch-rubric">Each historic Jaipur landmark—how close it stands to Kukas, and which motif it lent to our palace</p>
           </header>
 
           <figure class="ms-fresco ms-fresco-hero" data-ms-fresco>
-            <img class="ms-fresco-img" src="{P.R}assets/img/scroll/01-pinkcity-amer.webp" alt="Hand-painted Jaipur miniature scroll of the Maharaja's elephant and Marwari horse procession from Hawa Mahal past Jal Mahal to Amber Fort" decoding="async">
+            <img class="ms-fresco-img" src="{P.R}assets/img/scroll/01-pinkcity-amer.webp" alt="Hand-painted Jaipur miniature scroll showing Hawa Mahal, Jal Mahal and Amber Fort—the ancestral architectural inspirations surrounding The Vijayran Palace at Kukas" decoding="async">
           </figure>
 
           <div class="ms-cartography-row">
             <div class="ms-map-vignette" data-ms-peep>
-              <img src="{P.R}assets/img/map-jaipur-watercolor.webp" alt="Hand-painted watercolour heritage map of Jaipur, Jal Mahal, Amber Fort and The Vijayran Palace at Kukas" loading="lazy" decoding="async">
+              <img src="{P.R}assets/img/map-jaipur-watercolor.webp" alt="Hand-painted watercolour heritage map showing distances from The Vijayran Palace at Kukas to Amber Fort, Jal Mahal, Hawa Mahal and Jaipur Airport" loading="lazy" decoding="async">
             </div>
             <div class="ms-route-story">
               <p class="ms-dropcap">
-                Setting forth at dawn beneath the rose-terracotta honeycomb of <em>Hawa Mahal</em> and the courtyards of <em>City Palace</em>, the royal procession winds northward between folded ochre hills. At <em>Gaitore</em>, carved marble cenotaphs honour the Kachhwaha kings; ahead, <em>Jal Mahal</em> floats motionless upon the turquoise waters of Man Sagar Lake while <em>Nahargarh</em> and <em>Jaigarh</em> guard the high mountain rim.
+                Cradled in Kukas just twelve kilometres north of <em>Amber Fort</em>, The Vijayran Palace stands at the northern threshold of one of India’s richest architectural corridors. Rather than imitating a fortress by ornament alone, our estate translates centuries-old structural wisdom—the thick thermal sandstone of <em>Amer</em>, the wind-cooling <em>jaali</em> screens of <em>Hawa Mahal</em> (19 km), the four-quartered courts of <em>City Palace</em>, and the tranquil lake <em>baradaris</em> of <em>Jal Mahal</em> (15 km)—into a serene 21st-century sanctuary.
               </p>
               <p>
-                Climbing past the mighty ramparts and mirrored halls of <em>Amber Fort</em>—just twelve kilometres south of our gates—the highway gives way to quiet khejri groves and emerald crags until the sandstone domes of <strong>The Vijayran Palace, Kukas</strong> appear in serene mountain solitude.
+                Below, trace each ancestral monument surrounding Kukas—the exact distance from our gates and the enduring Rajputana architectural motif it inspired across our courtyards, suites, halls and pools.
               </p>
             </div>
           </div>
 
           <div class="ms-kos-band">
-            <p class="ms-kos-heading"><span>Kos Minar &middot; Hand-Painted Royal Milestones to The Vijayran Palace</span></p>
+            <p class="ms-kos-heading"><span>Architectural Lineage &middot; Distances from Historic Monuments to The Vijayran Palace</span></p>
             <div class="ms-kos-grid">
               {kos_html}
             </div>
           </div>
         </section>
 
-        {ms_trail("Leaving the ramparts of Amer twelve kilometres behind, the royal standards turn into the quiet valley of Kukas—where kettle-drums awaken above a towering yellow-sandstone gate.", "4 Royal Kos North of Amber Fort · Arriving at Kukas", flip=False)}
+        {ms_trail("Walk our estate chamber by chamber to see how each classical Jaipur motif—from Amer's elephant gates to Jal Mahal's water pavilions—takes living form inside The Vijayran Palace.", "Tracing Historic Blueprints Inside Every Courtyard", flip=False)}
 
-        <!-- KHAND II TO V: COMPLETE HAND-PAINTED PALACE TOUR -->
+        <!-- FOUR ARCHITECTURAL PILLARS OF THE PALACE -->
         {chapters_html}
 
         <!-- SHAHI MOHAR COLOPHON -->
         <footer class="ms-colophon" data-fade>
           <div class="ms-mohar">
             <img src="{P.R}assets/img/crest.png" alt="Royal Quest Resorts Crest" width="84" height="86">
-            <span>Shahi Mohar &middot; Kukas, Samvat Chronicle</span>
+            <span>The Vijayran Palace &middot; Kukas, Jaipur</span>
           </div>
           <p class="ms-colophon-script" aria-hidden="true">Padharo Mhare Des</p>
-          <h2 class="ms-colophon-title">Step Into the <span class="soft">Living Scroll.</span></h2>
+          <h2 class="ms-colophon-title">Experience <span class="soft">Living Jaipur Heritage.</span></h2>
           <p class="ms-colophon-text">
-            Thus concludes the painted stroll from the Pink City to Kukas. Thirty-five sunlit haveli suites and private-pool villas, seven palatial celebration venues and the timeless hospitality of Rajasthan await your arrival.
+            Thirty-five sunlit haveli suites and private-pool villas crafted in the architectural spirit of old Jaipur—resting in quiet Aravalli solitude just twelve kilometres north of Amber Fort.
           </p>
           <div class="ms-colophon-acts">
             {btn("Reserve Your Royal Stay", BOOK, "gold")}
@@ -1472,8 +1472,8 @@ def build():
     stroll_body = (royal_stroll_section()
       + collection("Step Inside Our Residences", "Thirty-five private-pool villas, terrace suites and haveli rooms await along the palace courtyards you have just walked.",
                    btn("Explore all stays", u("accommodation")), room_items(ROOMS), kicker="CONTINUE YOUR JOURNEY &middot; 35 SUITES &amp; VILLAS"))
-    page("royal-heritage-stroll/index.html", "The Royal Heritage Stroll | Complete Palace Tour | The Vijayran Palace Jaipur",
-         "Walk step by step through The Vijayran Palace in Kukas, Jaipur—an immersive first-person Rajasthani stroll from Gajdwar portal through Char Bagh, Swarn Mahal, Presidential Villas and Ambar Taal.", stroll_body, light=True)
+    page("royal-heritage-stroll/index.html", "Architectural Heritage Stroll | Inspired by Old Jaipur | The Vijayran Palace",
+         "Explore how The Vijayran Palace in Kukas takes architectural inspiration from Amber Fort, Jal Mahal, Hawa Mahal, City Palace, Gaitore and Nahargarh—plus distances and a full property tour.", stroll_body, light=True)
 
     # WEDDINGS
     venue_items = [{"img": "2021/06/g10.jpg", "name": "Vijayran Mahal Bagh", "tag": "1,000–1,500 guests", "text": "The grand front lawn, for the largest celebrations under the open sky."},

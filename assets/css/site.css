@@ -1059,8 +1059,7 @@ form.sent{display:none}form.sent+.form-ok{display:block}
 }
 
 [data-tilt] {
-  transform-style: preserve-3d;
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  transition: transform 0.35s var(--e-out), box-shadow 0.35s ease;
   will-change: transform;
 }
 
@@ -1640,10 +1639,8 @@ form.sent{display:none}form.sent+.form-ok{display:block}
   color: #8c7662;
 }
 
-/* 3D Map Stage */
+/* Stage Container */
 .exp-stage-3d {
-  perspective: 1400px;
-  transform-style: preserve-3d;
   display: flex;
   justify-content: center;
   position: relative;
@@ -1654,9 +1651,8 @@ form.sent{display:none}form.sent+.form-ok{display:block}
   width: 100%;
   position: relative;
   border-radius: 1.5rem;
-  transform: rotateX(6deg) rotateY(-0.5deg);
-  transform-style: preserve-3d;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.35s var(--e-out), box-shadow 0.35s ease;
   box-shadow: 0 2.25rem 5.5rem rgba(40, 25, 15, 0.18), 0 0 0 1px rgba(215, 180, 106, 0.45);
 }
 .exp-map-wrap {
@@ -2134,7 +2130,7 @@ form.sent{display:none}form.sent+.form-ok{display:block}
 @media (max-width: 991px) {
   .royal-expedition { padding: 4.5rem var(--g) 5.5rem; }
   .exp-stop-cards { grid-template-columns: repeat(2, 1fr); }
-  .exp-card-3d { transform: rotateX(4deg); }
+  .exp-card-3d { transform: translate3d(0, 0, 0); }
   .exp-float-card { position: relative; bottom: auto; left: auto; max-width: 100%; margin-top: 1.5rem; transform: none; }
 }
 @media (max-width: 600px) {
@@ -2160,13 +2156,13 @@ form.sent{display:none}form.sent+.form-ok{display:block}
     will-change: transform;
   }
 
-  /* Supple scroll-velocity physical response on image card frames */
+  /* Pure linear scroll-velocity sliding glide on image card frames (zero tilt/skew) */
   .js .ca-item .im,
   .js .itin-wc-frame,
   .js .hw-arch-frame,
   .js .dcs-slides,
   .js .stroll-main-frame {
-    transform: skewY(var(--vj-skew, 0deg));
+    transform: translate3d(0, var(--vj-slide, 0px), 0);
     transition: box-shadow 0.45s var(--e-out);
     will-change: transform;
   }
