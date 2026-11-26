@@ -106,7 +106,12 @@
       try {
         const r = await fetch(URL); if (!r.ok) throw 0;
         data = await r.json(); store.set(KEY, JSON.stringify({ at: Date.now(), d: data })); render();
-      } catch (_) { if (cached) { try { data = JSON.parse(cached).d; render(); } catch (_) {} } }
+      } catch (_) {
+        if (cached) { try { data = JSON.parse(cached).d; render(); return; } catch (_) {} }
+        const hr = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hour12: false, timeZone: 'Asia/Kolkata' }).format(new Date()));
+        data = { current: { temperature_2m: 27, weather_code: 0, is_day: (hr >= 6 && hr < 19) ? 1 : 0 }, daily: { temperature_2m_max: [31], temperature_2m_min: [17] } };
+        render();
+      }
     };
     $$('[data-wx="temp"], [data-wx="chip"]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); unit = unit === 'C' ? 'F' : 'C'; store.set(UNIT, unit); render(); }));
     load(false);
@@ -130,12 +135,20 @@
 
   gsap.registerPlugin(ScrollTrigger, SplitText, Draggable, InertiaPlugin);
 
-  /* ---------- Lenis smooth scroll ---------- */
+  /* ---------- Lenis smooth scroll + scroll-velocity card physics ---------- */
   let lenis = null;
   if (typeof Lenis !== 'undefined') {
     lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(t => lenis.raf(t * 1000));
+    let curSkew = 0, targetSkew = 0;
+    lenis.on('scroll', ({ velocity }) => { targetSkew = gsap.utils.clamp(-1.8, 1.8, velocity * 0.05); });
+    gsap.ticker.add(t => {
+      lenis.raf(t * 1000);
+      targetSkew *= 0.9;
+      curSkew += (targetSkew - curSkew) * 0.16;
+      if (Math.abs(curSkew) > 0.005) document.documentElement.style.setProperty('--vj-skew', `${curSkew.toFixed(3)}deg`);
+      else if (curSkew !== 0) { curSkew = 0; document.documentElement.style.setProperty('--vj-skew', '0deg'); }
+    });
     gsap.ticker.lagSmoothing(0);
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const t = $(a.getAttribute('href')); if (t) { e.preventDefault(); lenis.scrollTo(t, { offset: -80 }); } }));
   }
@@ -225,104 +238,177 @@
     gsap.fromTo(img, { scale: 1, yPercent: 0 }, { scale: 1.2, yPercent: 10, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
-  /* ---------- DRAG RAILS (collection, experiences, gallery) ---------- */
+  /* ---------- DRAG & CONTINUOUS AUTO-GLIDE RAILS (collection, experiences, gallery) ---------- */
   $$('[data-rail]').forEach(sec => {
     const rail = $('.rail', sec), track = $('.rail-track', sec);
     if (!rail || !track) return;
-    
-    const isAuto = sec.dataset.autoScroll === 'true';
-    if (isAuto) {
-      track.innerHTML += track.innerHTML;
+
+    const origHTML = track.innerHTML;
+    const origCount = track.children.length;
+    const canLoop = origCount > 1;
+    if (canLoop) {
+      track.innerHTML = origHTML + origHTML + origHTML;
     }
-    
+
     const items = $$('.ca-item', track);
     const bar = $('.rail-bar i', sec), dots = $('.dots', sec);
-    let max = 0;
-    const measure = () => { max = Math.max(0, track.scrollWidth - rail.clientWidth); };
+    let cycleWidth = 0, max = 0;
+
+    const measure = () => {
+      cycleWidth = canLoop && track.children[origCount]
+        ? (track.children[origCount].offsetLeft - track.children[0].offsetLeft)
+        : 0;
+      max = Math.max(0, track.scrollWidth - rail.clientWidth);
+    };
     measure();
+    if (cycleWidth > 0) gsap.set(track, { x: -cycleWidth });
+
+    const recenter = () => {
+      if (!cycleWidth) return;
+      const x = gsap.getProperty(track, 'x');
+      if (x <= -2 * cycleWidth) {
+        gsap.set(track, { x: x + cycleWidth });
+        drag?.update();
+      } else if (x >= 0) {
+        gsap.set(track, { x: x - cycleWidth });
+        drag?.update();
+      }
+    };
+
     const upd = () => {
       const x = gsap.getProperty(track, 'x');
-      const baseSpan = isAuto ? (track.scrollWidth / 2) : max;
-      const p = baseSpan ? Math.abs(x % baseSpan) / baseSpan : 0;
+      const rel = cycleWidth ? (((-x - cycleWidth) % cycleWidth + cycleWidth) % cycleWidth) : Math.abs(x);
+      const p = cycleWidth ? (rel / cycleWidth) : (max ? Math.min(1, Math.abs(x) / max) : 0);
       if (bar) gsap.set(bar, { left: `${p * 80}%` });
-      if (dots) { const i = Math.round(p * (items.length - 1)); $$('button', dots).forEach((b, j) => b.classList.toggle('on', i === j)); }
-    };
-    const dragBounds = isAuto ? { minX: -track.scrollWidth + rail.clientWidth, maxX: 0 } : { minX: -max, maxX: 0 };
-    const drag = Draggable.create(track, { type: 'x', inertia: true, edgeResistance: isAuto ? 0.6 : 0.9, bounds: dragBounds, allowContextMenu: true, zIndexBoost: false,
-      onDrag: upd, onThrowUpdate: upd, onPress() { this.startX = this.x; }, onClick() {} })[0];
-    $$('a', track).forEach(a => a.addEventListener('click', e => { if (Math.abs(drag.x - (drag.startX ?? drag.x)) > 6) e.preventDefault(); }));
-    const step = () => (items[0]?.offsetWidth || 400) + parseFloat(getComputedStyle(track).columnGap || 24);
-    const go = x => {
-      if (isAuto) {
-        const half = track.scrollWidth / 2;
-        if (x < -half) x += half;
-        if (x > 0) x -= half;
-      } else {
-        x = gsap.utils.clamp(-max, 0, x);
+      if (dots && origCount) {
+        const active = Math.round(p * origCount) % origCount;
+        $$('button', dots).forEach((b, j) => b.classList.toggle('on', active === j));
       }
-      gsap.to(track, { x, duration: 1.2, ease: 'power4.out', onUpdate: () => { drag.update(); upd(); } });
     };
-    $('[data-prev]', sec)?.addEventListener('click', () => go(gsap.getProperty(track, 'x') + step()));
-    $('[data-next]', sec)?.addEventListener('click', () => go(gsap.getProperty(track, 'x') - step()));
-    if (dots) { dots.innerHTML = items.map((_, i) => `<button aria-label="Slide ${i + 1}"></button>`).join(''); $$('button', dots).forEach((b, i) => b.addEventListener('click', () => go(-Math.min(max, items[i].offsetLeft)))); }
-    rail.tabIndex = 0; rail.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(gsap.getProperty(track, 'x') - step()); if (e.key === 'ArrowLeft') go(gsap.getProperty(track, 'x') + step()); });
-    addEventListener('resize', () => { measure(); drag.applyBounds(isAuto ? { minX: -track.scrollWidth + rail.clientWidth, maxX: 0 } : { minX: -max, maxX: 0 }); upd(); });
+
+    let hovered = false;
+    let userInteracting = false;
+    let resumeTimer = null;
+    let inView = false;
+
+    const pauseAuto = () => {
+      userInteracting = true;
+      clearTimeout(resumeTimer);
+    };
+    const resumeAuto = () => {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => { userInteracting = false; }, 2200);
+    };
+
+    const drag = Draggable.create(track, {
+      type: 'x',
+      inertia: true,
+      edgeResistance: canLoop ? 0.65 : 0.9,
+      bounds: { minX: -max, maxX: 0 },
+      allowContextMenu: true,
+      zIndexBoost: false,
+      onPress() { this.startX = this.x; pauseAuto(); },
+      onDrag: upd,
+      onThrowUpdate: upd,
+      onDragEnd() { if (!this.isThrowing) { recenter(); resumeAuto(); } },
+      onThrowComplete() { recenter(); resumeAuto(); },
+      onClick() {}
+    })[0];
+
+    $$('a', track).forEach(a => a.addEventListener('click', e => {
+      if (Math.abs(drag.x - (drag.startX ?? drag.x)) > 6) e.preventDefault();
+    }));
+
+    const step = () => (items[0]?.offsetWidth || 400) + parseFloat(getComputedStyle(track).columnGap || 24);
+    const go = targetX => {
+      pauseAuto();
+      gsap.killTweensOf(track);
+      if (!canLoop) targetX = gsap.utils.clamp(-max, 0, targetX);
+      gsap.to(track, {
+        x: targetX,
+        duration: 1.15,
+        ease: 'power4.out',
+        onUpdate: () => { drag.update(); upd(); },
+        onComplete: () => { recenter(); upd(); resumeAuto(); }
+      });
+    };
+
+    $('[data-prev]', sec)?.addEventListener('click', () => { recenter(); go(gsap.getProperty(track, 'x') + step()); });
+    $('[data-next]', sec)?.addEventListener('click', () => { recenter(); go(gsap.getProperty(track, 'x') - step()); });
+
+    if (dots) {
+      dots.innerHTML = Array.from({ length: origCount }, (_, i) => `<button aria-label="Slide ${i + 1}"></button>`).join('');
+      $$('button', dots).forEach((b, i) => b.addEventListener('click', () => {
+        const base = track.children[origCount];
+        const target = track.children[origCount + i];
+        const offset = base && target ? (target.offsetLeft - base.offsetLeft) : 0;
+        go(-(cycleWidth + offset));
+      }));
+    }
+
+    rail.tabIndex = 0;
+    rail.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { recenter(); go(gsap.getProperty(track, 'x') - step()); }
+      if (e.key === 'ArrowLeft') { recenter(); go(gsap.getProperty(track, 'x') + step()); }
+    });
+
+    addEventListener('resize', () => {
+      const prevCycle = cycleWidth;
+      measure();
+      if (canLoop && cycleWidth && !prevCycle) gsap.set(track, { x: -cycleWidth });
+      drag.applyBounds({ minX: -max, maxX: 0 });
+      recenter();
+      upd();
+    });
     upd();
 
-    if (isAuto) {
-      let speed = 0.75;
-      let hovered = false;
-      let userInteracting = false;
-      let resumeTimer = null;
-      let inView = false;
-      
+    if (canLoop) {
+      const speed = sec.classList.contains('gal') ? 0.5 : 0.6;
       ScrollTrigger.create({
         trigger: sec,
         start: 'top bottom',
         end: 'bottom top',
-        onEnter: () => inView = true,
-        onLeave: () => inView = false,
-        onEnterBack: () => inView = true,
-        onLeaveBack: () => inView = false
+        onEnter: () => { inView = true; },
+        onLeave: () => { inView = false; },
+        onEnterBack: () => { inView = true; },
+        onLeaveBack: () => { inView = false; }
       });
-      
-      const tick = () => {
-        if (!inView || hovered || userInteracting) return;
-        const half = track.scrollWidth / 2;
-        if (!half) return;
-        let cur = gsap.getProperty(track, 'x') - speed;
-        if (cur <= -half) cur += half;
-        gsap.set(track, { x: cur });
+
+      gsap.ticker.add(() => {
+        if (!inView || hovered || userInteracting || !cycleWidth) return;
+        gsap.set(track, { x: gsap.getProperty(track, 'x') - speed });
+        recenter();
         drag.update();
         upd();
-      };
-      
-      gsap.ticker.add(tick);
-      
+      });
+
       sec.addEventListener('mouseenter', () => { hovered = true; });
       sec.addEventListener('mouseleave', () => { hovered = false; });
-      
-      const pauseAuto = () => {
-        userInteracting = true;
-        clearTimeout(resumeTimer);
-      };
-      const resumeAuto = () => {
-        clearTimeout(resumeTimer);
-        resumeTimer = setTimeout(() => { userInteracting = false; }, 2200);
-      };
-      
-      drag.addEventListener('press', pauseAuto);
-      drag.addEventListener('dragEnd', resumeAuto);
-      drag.addEventListener('throwComplete', resumeAuto);
-      $('[data-prev]', sec)?.addEventListener('click', () => { pauseAuto(); resumeAuto(); });
-      $('[data-next]', sec)?.addEventListener('click', () => { pauseAuto(); resumeAuto(); });
-      
-      gsap.fromTo(items, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, stagger: 0.04, ease: 'power3.out', scrollTrigger: { trigger: sec, start: 'top 85%', once: true } });
-    } else {
-      /* items rise into place as the section scrolls in (scrubbed) */
-      gsap.fromTo(items, { yPercent: 50 }, { yPercent: 0, ease: 'none', stagger: { each: .1 }, scrollTrigger: { trigger: sec, start: 'top center', end: 'bottom bottom', scrub: 1 } });
     }
-    $$('.ca-line', sec).forEach(l => gsap.fromTo(l, { scaleX: 0 }, { scaleX: 1, duration: 2, ease: 'power4.out', scrollTrigger: { trigger: l, start: 'top 95%', once: true } }));
+
+    /* Scroll-scrubbed card cascade, horizontal rail glide & inner window image parallax */
+    gsap.fromTo(items,
+      { y: i => 60 + (i % 4) * 26, scale: 0.92, opacity: 0.35 },
+      { y: 0, scale: 1, opacity: 1, ease: 'power2.out',
+        scrollTrigger: { trigger: sec, start: 'top 95%', end: 'top 28%', scrub: 0.85 } }
+    );
+    gsap.fromTo(rail,
+      { xPercent: 4.5 },
+      { xPercent: -4.5, ease: 'none',
+        scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.9 } }
+    );
+    const cardImgs = $$('.ca-item .im img', track);
+    if (cardImgs.length) {
+      gsap.fromTo(cardImgs,
+        { scale: 1.22, yPercent: -13 },
+        { scale: 1.06, yPercent: 13, ease: 'none',
+          scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.6 } }
+      );
+    }
+    $$('.ca-line', sec).forEach(l => gsap.fromTo(l, { scaleX: 0 }, {
+      scaleX: 1, ease: 'none',
+      scrollTrigger: { trigger: sec, start: 'top 90%', end: 'top 38%', scrub: 0.7 }
+    }));
   });
 
   /* ---------- STORY: sticky text, images drift (desktop) ---------- */
@@ -339,29 +425,204 @@
   });
 
   /* ---------- STACKING CARDS ---------- */
-  $$('.stack-item').forEach((it, i) => {
+  $$('.stack-item').forEach((it) => {
     const img = $(':scope > img', it), panel = $('.stack-panel', it);
-    gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: it, start: 'top bottom', end: 'top top', scrub: true } });
-    if (panel) gsap.fromTo(panel, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.6, ease: 'power4.out', scrollTrigger: { trigger: it, start: 'top 35%', toggleActions: 'play none none reverse' } });
+    if (img) gsap.fromTo(img, { scale: 1.2, yPercent: -5 }, { scale: 1, yPercent: 5, ease: 'none', scrollTrigger: { trigger: it, start: 'top bottom', end: 'bottom top', scrub: 0.7 } });
+    if (panel) {
+      gsap.fromTo(panel,
+        { y: 90, scale: 0.93, opacity: 0.2 },
+        { y: 0, scale: 1, opacity: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: it, start: 'top 85%', end: 'top 15%', scrub: 0.8 } }
+      );
+    }
   });
 
-  /* ---------- RED FEATURE image parallax ---------- */
-  $$('.feat .im img').forEach(img => gsap.fromTo(img, { yPercent: -8, scale: 1.18 }, { yPercent: 8, scale: 1.18, ease: 'none', scrollTrigger: { trigger: img.closest('.feat'), start: 'top bottom', end: 'bottom top', scrub: true } }));
+  /* ---------- RED FEATURE scroll-scrubbed inset frame + image parallax ---------- */
+  $$('.feat').forEach(sec => {
+    const imWrap = $('.im', sec), img = $('.im img', sec), tx = $('.tx', sec);
+    if (imWrap) gsap.fromTo(imWrap,
+      { clipPath: 'inset(11% 8% 11% 8% round 0.75rem)' },
+      { clipPath: 'inset(0% 0% 0% 0% round 0rem)', ease: 'power2.out',
+        scrollTrigger: { trigger: sec, start: 'top 92%', end: 'top 32%', scrub: 0.85 } }
+    );
+    if (img) gsap.fromTo(img,
+      { yPercent: -13, scale: 1.24 },
+      { yPercent: 13, scale: 1.06, ease: 'none',
+        scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.6 } }
+    );
+    if (tx) gsap.fromTo(tx,
+      { y: 45 },
+      { y: -25, ease: 'none',
+        scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.9 } }
+    );
+  });
 
-  /* ---------- generic image reveals ---------- */
-  $$('[data-reveal]').forEach(el => {
+  /* ---------- generic image reveals (excluding masonry cards handled below) ---------- */
+  $$('[data-reveal]:not(.masonry figure)').forEach(el => {
     const img = $('img', el) || el;
-    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%', once: true } })
-      .fromTo(el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, ease: 'power4.inOut' })
-      .fromTo(img, { scale: 1.25 }, { scale: 1, duration: 2.2, ease: 'power3.out' }, 0);
+    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 35%', scrub: 0.8 } })
+      .fromTo(el, { clipPath: 'inset(24% 6% 24% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' })
+      .fromTo(img, { scale: 1.24 }, { scale: 1, ease: 'power2.out' }, 0);
   });
-  $$('[data-fade]').forEach(el => gsap.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.6, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true } }));
+  const scrubManagedSelector = '.story-diptych, .itin .map, #hwStage, .hw-nav-tabs, .hw-stats-strip, .pk > article, .contact-cols > div';
+  $$('[data-fade]').filter(el => !el.matches(scrubManagedSelector)).forEach(el => {
+    gsap.fromTo(el, { opacity: 0.15, y: 42 }, {
+      opacity: 1, y: 0, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 94%', end: 'top 52%', scrub: 0.75 }
+    });
+  });
+
+  /* ==========================================================================
+     SCROLL-BASED CARD & SECTION MOTION LAYER — every page, every card
+     ========================================================================== */
+  (() => {
+    const skip = el => el.matches('[data-fade], [data-split], [data-reveal]') || Boolean(el.closest('[data-split], [data-reveal], .menu, .book-panel, .nav, .stack-panel, .story-chronicle, .maharaja-scroll'));
+    const scrubRise = (els, o = {}) => {
+      els = els.filter(el => o.any || !skip(el)); if (!els.length) return;
+      els.forEach((el, i) => {
+        const yFrom = (o.y ?? 45) + (i % (o.mod || 4)) * (o.step ?? 16);
+        gsap.fromTo(el,
+          { opacity: o.oFrom ?? 0.2, y: yFrom, scale: o.scale ?? 0.95 },
+          { opacity: 1, y: 0, scale: 1, ease: 'power2.out',
+            scrollTrigger: { trigger: o.trigger || el, start: o.start || 'top 94%', end: o.end || 'top 50%', scrub: o.scrub ?? 0.8 } }
+        );
+      });
+    };
+
+    /* 1. Gold scroll-progress hairline */
+    const bar = document.createElement('div'); bar.className = 'scroll-progress'; document.body.appendChild(bar);
+    gsap.to(bar, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .3 } });
+
+    /* 2. Nav glides away on scroll down, returns immediately on scroll up */
+    if (nav) ScrollTrigger.create({ start: 120, end: 'max', onUpdate: s => {
+      if (document.body.classList.contains('menu-open') || book?.classList.contains('open')) return nav.classList.remove('is-hidden');
+      nav.classList.toggle('is-hidden', s.direction === 1 && s.scroll() > innerHeight * .6);
+    }, onLeaveBack: () => nav.classList.remove('is-hidden') });
+
+    /* 3. Hero: kicker tracked reveal & continuous living zoom-drift on photo/video */
+    $$('.hero-cap .lbl').forEach(l => gsap.from(l, { opacity: 0, y: 20, letterSpacing: '.48em', duration: 2, ease: 'power3.out', delay: .2 }));
+    $$('.hero-media img, .hero-media video').forEach(m => gsap.to(m, { scale: 1.08, xPercent: -1.5, duration: 14, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+
+    /* 4. Kicker labels across all sections: scroll-scrubbed letter-spacing tighten */
+    $$('main .lbl').filter(el => !skip(el) && !el.closest('.hero-cap, .wx-hero')).forEach(l => {
+      const targetLS = getComputedStyle(l).letterSpacing;
+      gsap.fromTo(l,
+        { opacity: 0.15, letterSpacing: '.42em', y: 14 },
+        { opacity: 1, letterSpacing: targetLS, y: 0, ease: 'power2.out',
+          scrollTrigger: { trigger: l, start: 'top 95%', end: 'top 62%', scrub: 0.7 } }
+      );
+    });
+
+    /* 5. Royal ornaments self-draw with scroll */
+    $$('main .orn, footer .orn').filter(o => !o.closest('.story-chronicle')).forEach(o => {
+      const ps = $$('path', o), dot = $('circle', o);
+      ps.forEach(p => { try { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); } catch (_) {} });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: o, start: 'top 94%', end: 'top 58%', scrub: 0.8 } });
+      tl.to(ps, { strokeDashoffset: 0, duration: 1, ease: 'none', stagger: .12 });
+      if (dot) tl.from(dot, { scale: 0, transformOrigin: '50% 50%', duration: .45, ease: 'back.out(2)' }, '-=.35');
+    });
+
+    /* 6. Buttons & CTAs scrub smoothly into place */
+    scrubRise($$('main .btn'), { y: 26, step: 10, scale: 0.97, start: 'top 96%', end: 'top 68%', scrub: 0.65 });
+
+    /* 7. Accurate count-up for heritage figures & distances (preserves decimals & commas) */
+    $$('.sdp-num, .hw-stat-n, .ims-num, .f-badge > span').forEach(el => {
+      const node = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.textContent)); if (!node) return;
+      const m = node.textContent.match(/^(\D*)([\d,]+(?:\.\d+)?)(.*)$/s); if (!m) return;
+      const end = parseFloat(m[2].replace(/,/g, '')), comma = m[2].includes(','), dec = (m[2].split('.')[1] || '').length, o = { v: 0 };
+      const fmt = v => {
+        const num = dec ? v.toFixed(dec) : (comma ? Math.round(v).toLocaleString('en-IN') : String(Math.round(v)));
+        return m[1] + num + m[3];
+      };
+      node.textContent = fmt(0);
+      gsap.to(o, { v: end, duration: 2.1, ease: 'power2.out', onUpdate: () => { node.textContent = fmt(o.v); },
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
+    });
+
+    /* 8. Day Clock & Activity Card (#experiences) scroll-scrubbed depth */
+    $$('.day-clock-section').forEach(sec => {
+      const clockCol = $('.dcs-clock-col', sec), actCol = $('.dcs-activity-col', sec), imgIn = $$('.dcs-img-inner', sec);
+      if (clockCol) gsap.fromTo(clockCol, { y: 55, scale: 0.94 }, { y: -25, scale: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.9 } });
+      if (actCol) gsap.fromTo(actCol, { y: 95, scale: 0.92 }, { y: -35, scale: 1.01, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.85 } });
+      if (imgIn.length) gsap.fromTo(imgIn, { yPercent: -10 }, { yPercent: 10, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 0.65 } });
+    });
+
+    /* 9. Weddings Venue Cards & Featured Arch Stage Card (#weddings) scroll-scrubbed depth */
+    $$('.home-wedding').forEach(sec => {
+      const tabs = $$('.hw-tab', sec), media = $('.hw-stage-media', sec), info = $('.hw-stage-info', sec), mImg = $('#hwMainImg', sec), stats = $$('.hw-stat', sec);
+      if (tabs.length) scrubRise(tabs, { any: true, trigger: $('.hw-nav-tabs', sec), y: 40, step: 18, scale: 0.94, start: 'top 92%', end: 'top 48%', scrub: 0.75 });
+      if (media) gsap.fromTo(media, { y: 85, scale: 0.92 }, { y: -35, scale: 1.02, ease: 'none', scrollTrigger: { trigger: '#hwStage', start: 'top bottom', end: 'bottom top', scrub: 0.9 } });
+      if (mImg) gsap.fromTo(mImg, { scale: 1.18, yPercent: -11 }, { scale: 1.04, yPercent: 11, ease: 'none', scrollTrigger: { trigger: '#hwStage', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+      if (info) gsap.fromTo(info, { y: 50 }, { y: -20, ease: 'none', scrollTrigger: { trigger: '#hwStage', start: 'top bottom', end: 'bottom top', scrub: 0.9 } });
+      if (stats.length) scrubRise(stats, { any: true, trigger: $('.hw-stats-strip', sec), y: 34, step: 14, scale: 0.96, start: 'top 94%', end: 'top 58%', scrub: 0.75 });
+    });
+
+    /* 10. Watercolour Heritage Map Frame (.itin) scroll-scrubbed directly on background (unclipped) */
+    $$('.itin').forEach(sec => {
+      const mapCard = $('.map', sec), pills = $$('.itin-ms', sec);
+      if (mapCard) gsap.fromTo(mapCard,
+        { y: 65, scale: 0.93, opacity: 0.35 },
+        { y: -18, scale: 1.0, opacity: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: sec, start: 'top 95%', end: 'bottom top', scrub: 0.85 } }
+      );
+      if (pills.length) scrubRise(pills, { any: true, trigger: $('.itin-milestones', sec), y: 24, step: 10, scale: 0.96, start: 'top 94%', end: 'top 60%', scrub: 0.7 });
+    });
+
+    /* 11. Masonry Gallery Image Cards (.masonry figure): 3-speed column depth + inner window parallax */
+    $$('.masonry figure').forEach((fig, i) => {
+      const im = $('img', fig), colSpeed = (i % 3);
+      gsap.fromTo(fig,
+        { y: 55 + colSpeed * 32, scale: 0.93, opacity: 0.25 },
+        { y: -(15 + colSpeed * 18), scale: 1, opacity: 1, ease: 'none',
+          scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: 0.8 } }
+      );
+      if (im) gsap.fromTo(im,
+        { scale: 1.2, yPercent: -10 },
+        { scale: 1.04, yPercent: 10, ease: 'none',
+          scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: 0.6 } }
+      );
+    });
+
+    /* 12. Package cards, Contact cards, Accordions, Venue tables, Forms, Prose & Map */
+    scrubRise($$('.sd-pillar'), { any: true, y: 32, step: 14, scale: 0.95, start: 'top 94%', end: 'top 58%', scrub: 0.75 });
+    scrubRise($$('.dcs-dot'), { any: true, y: 20, step: 8, scale: 0.95, start: 'top 95%', end: 'top 65%', scrub: 0.7 });
+    scrubRise($$('.pk > article'), { any: true, mod: 2, y: 60, step: 28, scale: 0.94, start: 'top 94%', end: 'top 45%', scrub: 0.8 });
+    scrubRise($$('.contact-cols > div'), { any: true, mod: 3, y: 50, step: 22, scale: 0.95, start: 'top 94%', end: 'top 48%', scrub: 0.8 });
+    scrubRise($$('.acc-i'), { y: 24, step: 8, scale: 0.99, start: 'top 95%', end: 'top 65%', scrub: 0.65 });
+    scrubRise($$('.venues thead tr, .venues tbody tr'), { y: 22, step: 8, scale: 0.99, start: 'top 95%', end: 'top 65%', scrub: 0.65 });
+    scrubRise($$('.form .checks, .form label'), { y: 22, step: 6, scale: 0.99, start: 'top 96%', end: 'top 68%', scrub: 0.65 });
+    scrubRise($$('.prose > *'), { y: 24, step: 6, scale: 0.99, start: 'top 95%', end: 'top 68%', scrub: 0.65 });
+    $$('.map-frame').forEach(f => gsap.fromTo(f, { clipPath: 'inset(8% 6% 8% 6% round 1.25rem)', opacity: .45 }, { clipPath: 'inset(0% 0% 0% 0% round 0rem)', opacity: 1, ease: 'none', scrollTrigger: { trigger: f, start: 'top 92%', end: 'top 32%', scrub: 0.85 } }));
+
+    /* 13. Quote section: handwritten signature writes in with scroll */
+    $$('.quote .sig').forEach(s => gsap.fromTo(s, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: { trigger: s, start: 'top 92%', end: 'top 48%', scrub: 0.8 } }));
+
+    /* 14. Footer choreography: scrubbed entrance */
+    $$('.footer').forEach(f => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: 'top 92%', end: 'top 38%', scrub: 0.8 } });
+      const crest = $('.f-crest', f), word = $('.f-word', f);
+      if (crest) tl.from(crest, { opacity: 0, scale: .72, rotate: -8, duration: 1 });
+      if (word) tl.from(word, { opacity: 0, x: -28, duration: 0.9 }, '-=.7');
+      tl.from($$('.f-badges > *', f), { opacity: 0, y: 20, duration: 0.8, stagger: .1 }, '-=.6')
+        .from($$('.f-grid > div', f), { opacity: 0, y: 36, duration: 1, stagger: .14 }, '-=.5');
+    });
+
+    /* 15. Subtle magnetic pull on buttons (desktop pointer) */
+    if (matchMedia('(hover: hover)').matches) {
+      $$('main .btn, footer .btn').forEach(b => {
+        const xTo = gsap.quickTo(b, 'x', { duration: .5, ease: 'power3.out' }), yTo = gsap.quickTo(b, 'y', { duration: .5, ease: 'power3.out' });
+        b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * .18); yTo((e.clientY - r.top - r.height / 2) * .28); });
+        b.addEventListener('mouseleave', () => { xTo(0); yTo(0); });
+      });
+    }
+  })();
+
   /* ---------- ROYAL ARCHITECTURAL SKETCH SHAPE-UP WITH SCROLL ---------- */
-  const skWrap = $('.sk-wrap');
-  if (skWrap && hasGsap && !reduce) {
+  $$('.sk-wrap').forEach(skWrap => {
     const strokes = $$('.sk-p', skWrap);
     const sun = $('.sk-p-sun', skWrap);
     const full = $('.sk-p-full', skWrap);
+    const q = s => $$(s, skWrap);
 
     strokes.forEach(p => {
       try {
@@ -384,37 +645,27 @@
       }
     });
 
-    // 1. Base steps & lotus pool draw in
-    tl.to('.sk-p1, .sk-p2', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0);
+    tl.to(q('.sk-p1, .sk-p2'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0);
     tl.to(skWrap, { opacity: 1, y: 0, scale: 1, ease: 'power2.out', duration: 0.8 }, 0);
-
-    // 2. Ceremonial Gateway and Royal Elephant draw in
-    tl.to('.sk-p3, .sk-p4', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.15);
-    tl.to('.sk-p5, .sk-p6, .sk-p7', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.2);
-
-    // 3. Galloping Marwari horses and side wings/chattris draw in
-    tl.to('.sk-p8, .sk-p9, .sk-p10', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.35);
-    tl.to('.sk-p11, .sk-p12', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.4);
-
-    // 4. Upper 5-arch Baradari and Aravalli hills draw in
-    tl.to('.sk-p13, .sk-p14', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.55);
-    tl.to('.sk-p15, .sk-p16', { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.6);
-
-    // 5. Royal Surya Sun crest expands at the peak
+    tl.to(q('.sk-p3, .sk-p4'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.15);
+    tl.to(q('.sk-p5, .sk-p6, .sk-p7'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.2);
+    tl.to(q('.sk-p8, .sk-p9, .sk-p10'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.45 }, 0.35);
+    tl.to(q('.sk-p11, .sk-p12'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.4 }, 0.4);
+    tl.to(q('.sk-p13, .sk-p14'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.55);
+    tl.to(q('.sk-p15, .sk-p16'), { strokeDashoffset: 0, ease: 'power1.inOut', duration: 0.35 }, 0.6);
     if (sun) tl.to(sun, { scale: 1, ease: 'back.out(1.4)', duration: 0.35 }, 0.7);
-
-    // 6. Complete unmasking so all fine details and cross-hatching are 100% visible
     if (full) tl.to(full, { opacity: 1, ease: 'power1.out', duration: 0.25 }, 0.85);
-  }
+  });
 
   /* Clear any legacy font preset overrides to enforce Libre Caslon Display */
   try { localStorage.removeItem('vj-font-preset'); } catch (_) {}
   document.documentElement.removeAttribute('data-font-preset');
 
   /* ==========================================================================
-     WEDDINGS AT THE PALACE — INTERACTIVE VENUE SHOWCASE
+     WEDDINGS AT THE PALACE — AUTO-NAVIGATING VENUE SHOWCASE
      ========================================================================== */
   (() => {
+    const stage = $('#hwStage');
     const mainImg = $('#hwMainImg');
     const title = $('#hwCardTitle');
     const desc = $('#hwCardDesc');
@@ -423,49 +674,137 @@
     const hl1 = $('#hwHl1');
     const hl2 = $('#hwHl2');
     const hl3 = $('#hwHl3');
-    const cards = $$('.hw-vcard');
+    const counter = $('#hwCounter');
+    const tabs = $$('.hw-tab');
+    const prevBtn = $('#hwPrevBtn');
+    const nextBtn = $('#hwNextBtn');
 
-    if (!mainImg || !cards.length) return;
+    if (!stage || !mainImg || !tabs.length) return;
 
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        cards.forEach(c => c.classList.remove('is-active'));
-        card.classList.add('is-active');
+    const venuesData = Array.from(tabs).map(t => ({
+      img: t.dataset.img,
+      title: t.dataset.title,
+      tag: t.dataset.tag,
+      setting: t.dataset.setting,
+      desc: t.dataset.desc,
+      hl1: t.dataset.hl1,
+      hl2: t.dataset.hl2,
+      hl3: t.dataset.hl3,
+      num: t.dataset.num
+    }));
 
-        // Cross-fade image transition
-        if (hasGsap) {
-          gsap.to(mainImg, {
-            opacity: 0,
-            scale: 0.98,
-            duration: 0.25,
-            ease: 'power2.in',
-            onComplete: () => {
-              mainImg.src = card.dataset.img;
-              mainImg.alt = card.dataset.title;
-              if (title) title.textContent = card.dataset.title;
-              if (desc) desc.textContent = card.dataset.desc;
-              if (badgeTag) badgeTag.textContent = card.dataset.tag;
-              if (badgeSetting) badgeSetting.textContent = card.dataset.setting;
-              if (hl1) hl1.textContent = card.dataset.hl1;
-              if (hl2) hl2.textContent = card.dataset.hl2;
-              if (hl3) hl3.textContent = card.dataset.hl3;
+    let current = 0;
+    const total = venuesData.length;
+    let timer = null;
+    let isHovered = false;
+    const DURATION = 5000; // 5 seconds per venue
 
-              gsap.to(mainImg, { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' });
-            }
-          });
-        } else {
-          mainImg.src = card.dataset.img;
-          mainImg.alt = card.dataset.title;
-          if (title) title.textContent = card.dataset.title;
-          if (desc) desc.textContent = card.dataset.desc;
-          if (badgeTag) badgeTag.textContent = card.dataset.tag;
-          if (badgeSetting) badgeSetting.textContent = card.dataset.setting;
-          if (hl1) hl1.textContent = card.dataset.hl1;
-          if (hl2) hl2.textContent = card.dataset.hl2;
-          if (hl3) hl3.textContent = card.dataset.hl3;
-        }
+    const showVenue = (index, manual = false) => {
+      current = (index + total) % total;
+      const v = venuesData[current];
+
+      tabs.forEach((tab, i) => {
+        const isActive = i === current;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
+
+      if (hasGsap) {
+        gsap.to(mainImg, {
+          opacity: 0,
+          scale: 0.98,
+          duration: 0.25,
+          ease: 'power2.in',
+          onComplete: () => {
+            mainImg.src = v.img;
+            mainImg.alt = v.title;
+            if (title) title.textContent = v.title;
+            if (desc) desc.textContent = v.desc;
+            if (badgeTag) badgeTag.textContent = v.tag;
+            if (badgeSetting) badgeSetting.textContent = v.setting;
+            if (hl1) hl1.textContent = v.hl1;
+            if (hl2) hl2.textContent = v.hl2;
+            if (hl3) hl3.textContent = v.hl3;
+            if (counter) counter.textContent = `${v.num} / 0${total}`;
+
+            gsap.to(mainImg, { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' });
+          }
+        });
+      } else {
+        mainImg.src = v.img;
+        mainImg.alt = v.title;
+        if (title) title.textContent = v.title;
+        if (desc) desc.textContent = v.desc;
+        if (badgeTag) badgeTag.textContent = v.tag;
+        if (badgeSetting) badgeSetting.textContent = v.setting;
+        if (hl1) hl1.textContent = v.hl1;
+        if (hl2) hl2.textContent = v.hl2;
+        if (hl3) hl3.textContent = v.hl3;
+        if (counter) counter.textContent = `${v.num} / 0${total}`;
+      }
+
+      resetTimer();
+    };
+
+    const nextVenue = () => showVenue(current + 1);
+    const prevVenue = () => showVenue(current - 1);
+
+    const startTimer = () => {
+      clearTimeout(timer);
+      const activeTab = tabs[current];
+      const activeBar = activeTab ? $('.hw-progress-bar', activeTab) : null;
+      if (activeBar && hasGsap) {
+        gsap.killTweensOf(activeBar);
+        gsap.fromTo(activeBar, { width: '0%' }, { width: '100%', duration: DURATION / 1000, ease: 'none' });
+      }
+      timer = setTimeout(() => {
+        if (!isHovered) {
+          nextVenue();
+        }
+      }, DURATION);
+    };
+
+    const resetTimer = () => {
+      $$('.hw-progress-bar').forEach(b => {
+        if (hasGsap) gsap.killTweensOf(b);
+        b.style.width = '0%';
+      });
+      startTimer();
+    };
+
+    tabs.forEach((tab, idx) => {
+      tab.addEventListener('click', () => showVenue(idx, true));
     });
+
+    if (prevBtn) prevBtn.addEventListener('click', () => prevVenue());
+    if (nextBtn) nextBtn.addEventListener('click', () => nextVenue());
+
+    // Pause auto-navigation on hover
+    stage.addEventListener('mouseenter', () => {
+      isHovered = true;
+      clearTimeout(timer);
+      const activeBar = $('.is-active .hw-progress-bar');
+      if (activeBar && hasGsap) gsap.getTweensOf(activeBar).forEach(t => t.pause());
+    });
+
+    stage.addEventListener('mouseleave', () => {
+      isHovered = false;
+      const activeBar = $('.is-active .hw-progress-bar');
+      if (activeBar && hasGsap) gsap.getTweensOf(activeBar).forEach(t => t.resume());
+      startTimer();
+    });
+
+    // Start auto-navigation when section enters viewport
+    if (typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.create({
+        trigger: '#weddings',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => startTimer()
+      });
+    } else {
+      startTimer();
+    }
   })();
 
   /* ==========================================================================
@@ -493,6 +832,623 @@
       el.addEventListener('mouseenter', () => { rect = el.getBoundingClientRect(); });
       el.addEventListener('mousemove', onMove);
       el.addEventListener('mouseleave', onLeave);
+    });
+  })();
+
+  /* ==========================================================================
+     ROYAL EXPEDITION & 3D HORSE MOTION CONTROLLER
+     ========================================================================== */
+  (() => {
+    const mapSvg = $('#royalExpeditionMap');
+    if (!mapSvg) return;
+
+    const path = $('#royalHighwayPath');
+    const travelTrail = $('#royalTravelTrail');
+    const horseRig = $('#royalHorseRig');
+    const stage = $('#map3DStage');
+    const mapCard = $('#map3DCard');
+    const playBtn = $('#expPlayBtn');
+    const resetBtn = $('#expResetBtn');
+    const playLabel = $('#expPlayLabel');
+    const statusText = $('#expStatusText');
+    const stopCards = $$('.exp-stop-card');
+    const floatingCard = $('#expFloatingCard');
+    const efcBadge = $('#efcBadge');
+    const efcTitle = $('#efcTitle');
+    const efcDesc = $('#efcDesc');
+    const efcTip = $('#efcTip');
+    const particleContainer = $('#horseDustParticles');
+
+    if (!path || !horseRig) return;
+
+    const totalLength = path.getTotalLength();
+    if (travelTrail) {
+      travelTrail.style.strokeDasharray = totalLength;
+      travelTrail.style.strokeDashoffset = totalLength;
+    }
+
+    // 5 Stops configuration matching exact spline geometry
+    const stops = [
+      {
+        idx: 0,
+        dist: 0,
+        name: "Jaipur Airport",
+        distLabel: "30 KM FROM PALACE · ~45 MIN DRIVE",
+        role: "Gateway of Rajasthan",
+        desc: "Where your princely journey begins. Chauffeur-driven luxury palace transfers glide northwards along the scenic highway directly into the peaceful Aravalli valley.",
+        tip: "Private airport transfers can be pre-arranged with the palace concierge.",
+        pos: { x: 392, y: 915 }
+      },
+      {
+        idx: 1,
+        dist: totalLength * 0.11,
+        name: "Hawa Mahal & Pink City",
+        distLabel: "19 KM FROM PALACE · ~35 MIN DRIVE",
+        role: "Palace of Winds & Bazaars",
+        desc: "Maharaja Sawai Pratap Singh's 1799 architectural masterpiece with 953 honeycombed jharokhas, adjacent to the City Palace, Jantar Mantar, and bustling Johari gem bazaar.",
+        tip: "Visit in the morning when the rising sun illuminates the pink sandstone facade.",
+        pos: { x: 475, y: 780 }
+      },
+      {
+        idx: 2,
+        dist: totalLength * 0.335,
+        name: "Jal Mahal",
+        distLabel: "15 KM FROM PALACE · ~25 MIN DRIVE",
+        role: "Sunlit Water Palace",
+        desc: "An ethereal pale yellow sandstone palace resting gracefully amidst the turquoise waters of Man Sagar Lake, framed by ancient rolling Aravalli peaks.",
+        tip: "A breathtaking photography viewpoint along Amer Road, especially at twilight.",
+        pos: { x: 245, y: 530 }
+      },
+      {
+        idx: 3,
+        dist: totalLength * 0.605,
+        name: "Amber Fort",
+        distLabel: "12 KM FROM PALACE · ~18 MIN DRIVE",
+        role: "Citadel of the Kachhwahas",
+        desc: "The colossal 16th-century mountain stronghold renowned for the glittering Sheesh Mahal (Mirror Palace), majestic elephant ramparts, and Maota Lake reflections.",
+        tip: "Enjoy the evening sound-and-light show before returning for high tea at the palace.",
+        pos: { x: 315, y: 375 }
+      },
+      {
+        idx: 4,
+        dist: totalLength,
+        name: "The Vijayran Palace",
+        distLabel: "DESTINATION · KUKAS IN THE ARAVALLIS",
+        role: "Your Palatial Sanctuary",
+        desc: "Nestled in secluded tranquility among the ancient Aravalli hills. Thirty-five royal haveli suites and private pool villas, lush Mughal gardens, and timeless Rajasthani royalty.",
+        tip: "The ultimate haven for stillness, royal dining, and bespoke heritage stays.",
+        pos: { x: 775, y: 275 }
+      }
+    ];
+
+    let currentDist = 0;
+    let targetDist = null; // null = continuous auto-ride mode
+    let isPlaying = true;
+    let isDwelling = false;
+    let dwellTimer = null;
+    let currentStopIdx = 0;
+    let lastFrameTime = performance.now();
+    let lastParticleTime = 0;
+    const autoSpeed = 75; // pixels per second for graceful majestic canter
+
+    const spawnParticle = (x, y) => {
+      if (!particleContainer || reduce) return;
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', x + (Math.random() * 6 - 3));
+      c.setAttribute('cy', y + 16 + (Math.random() * 4));
+      c.setAttribute('r', '2.2');
+      c.setAttribute('fill', '#d7b46a');
+      c.setAttribute('opacity', '0.75');
+      particleContainer.appendChild(c);
+
+      if (hasGsap) {
+        gsap.to(c, {
+          attr: { r: 5, cy: y + 20 + Math.random() * 6 },
+          opacity: 0,
+          duration: 0.7,
+          ease: 'power1.out',
+          onComplete: () => { if (c.parentNode) c.parentNode.removeChild(c); }
+        });
+      } else {
+        setTimeout(() => { if (c.parentNode) c.parentNode.removeChild(c); }, 700);
+      }
+    };
+
+    const updateFloatingCard = (stop) => {
+      if (!floatingCard) return;
+      if (efcBadge) efcBadge.textContent = stop.distLabel;
+      if (efcTitle) efcTitle.textContent = stop.name;
+      if (efcDesc) efcDesc.textContent = stop.desc;
+      if (efcTip) efcTip.innerHTML = `<b>Royal Tip:</b> ${stop.tip}`;
+
+      // Update active stop card UI
+      stopCards.forEach((c, idx) => {
+        const isActive = idx === stop.idx;
+        c.classList.toggle('is-active', isActive);
+        c.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      // Update beacon active state
+      $$('.map-stop-beacon').forEach((b, idx) => {
+        b.classList.toggle('is-active', idx === stop.idx);
+      });
+
+      // Update status text
+      if (statusText) {
+        if (stop.idx === 4) {
+          statusText.textContent = `Arrived at The Vijayran Palace · Kukas`;
+        } else {
+          statusText.textContent = `At ${stop.name} (${stop.distLabel.split('·')[0].trim()})`;
+        }
+      }
+    };
+
+    const renderHorseAtDist = (dist, isMoving) => {
+      const clampedDist = Math.max(0, Math.min(totalLength, dist));
+      const p = path.getPointAtLength(clampedDist);
+      const lookAhead = Math.min(totalLength, clampedDist + 3);
+      const pNext = path.getPointAtLength(lookAhead);
+      const dx = pNext.x - p.x;
+      const dy = pNext.y - p.y;
+
+      let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      let flip = Math.cos(angle * Math.PI / 180) < 0;
+
+      // 3D elevation scaling as the horse journeys into the Aravalli hills (heroic royal scale)
+      const elevationScale = 1.35 + (clampedDist / totalLength) * 0.35;
+
+      if (flip) {
+        horseRig.setAttribute('transform', `translate(${p.x}, ${p.y}) rotate(${angle + 180}) scale(${-elevationScale}, ${elevationScale})`);
+      } else {
+        horseRig.setAttribute('transform', `translate(${p.x}, ${p.y}) rotate(${angle}) scale(${elevationScale}, ${elevationScale})`);
+      }
+
+      // Update travel trail
+      if (travelTrail) {
+        travelTrail.style.strokeDashoffset = totalLength - clampedDist;
+      }
+
+      // Spawn hooves dust
+      const now = performance.now();
+      if (isMoving && now - lastParticleTime > 90) {
+        lastParticleTime = now;
+        spawnParticle(p.x, p.y);
+      }
+    };
+
+    const arriveAtStop = (stopIdx) => {
+      currentStopIdx = stopIdx;
+      isDwelling = true;
+      updateFloatingCard(stops[stopIdx]);
+
+      // Pause for dwelling to let guest admire the stop
+      clearTimeout(dwellTimer);
+      const dwellMs = (stopIdx === 4) ? 4000 : 2200;
+      dwellTimer = setTimeout(() => {
+        isDwelling = false;
+        if (stopIdx === 4) {
+          // Reached destination! Restart loop smoothly from airport
+          currentDist = 0;
+          currentStopIdx = 0;
+          updateFloatingCard(stops[0]);
+        }
+      }, dwellMs);
+    };
+
+    const goToStop = (idx) => {
+      clearTimeout(dwellTimer);
+      isDwelling = false;
+      targetDist = stops[idx].dist;
+      updateFloatingCard(stops[idx]);
+      if (statusText) {
+        statusText.textContent = `Riding towards ${stops[idx].name}...`;
+      }
+    };
+
+    // Main 60fps Animation Loop
+    const tick = (now) => {
+      const dt = Math.min(0.1, (now - lastFrameTime) / 1000);
+      lastFrameTime = now;
+
+      let isMoving = false;
+
+      if (isPlaying && !isDwelling) {
+        if (targetDist !== null) {
+          // Navigating to a specific stop
+          const diff = targetDist - currentDist;
+          const step = Math.sign(diff) * autoSpeed * 1.8 * dt;
+          if (Math.abs(diff) <= Math.abs(step) || Math.abs(diff) < 2) {
+            currentDist = targetDist;
+            targetDist = null;
+            arriveAtStop(currentStopIdx);
+          } else {
+            currentDist += step;
+            isMoving = true;
+          }
+        } else {
+          // Continuous Auto-Ride Progress
+          currentDist += autoSpeed * dt;
+          isMoving = true;
+
+          // Check if passed next milestone stop
+          const nextStop = stops[currentStopIdx + 1];
+          if (nextStop && currentDist >= nextStop.dist) {
+            currentDist = nextStop.dist;
+            arriveAtStop(nextStop.idx);
+          }
+        }
+      }
+
+      renderHorseAtDist(currentDist, isMoving);
+      requestAnimationFrame(tick);
+    };
+
+    // Initialize position at Stop 0
+    renderHorseAtDist(0, false);
+    updateFloatingCard(stops[0]);
+    requestAnimationFrame(tick);
+
+    // Event Listeners for Stop Cards
+    stopCards.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        currentStopIdx = idx;
+        goToStop(idx);
+      });
+    });
+
+    // Event Listeners for Map Beacons
+    $$('.map-stop-beacon').forEach((b, idx) => {
+      b.addEventListener('click', () => {
+        currentStopIdx = idx;
+        goToStop(idx);
+      });
+    });
+
+    // Play / Pause Toggle
+    if (playBtn) {
+      const playIcon = $('.exp-icon-play', playBtn);
+      const pauseIcon = $('.exp-icon-pause', playBtn);
+
+      const updatePlayState = (playing) => {
+        isPlaying = playing;
+        playBtn.classList.toggle('is-playing', playing);
+        if (playIcon) playIcon.style.display = playing ? 'none' : 'inline-block';
+        if (pauseIcon) pauseIcon.style.display = playing ? 'inline-block' : 'none';
+        if (playLabel) playLabel.textContent = playing ? 'Pause Journey' : 'Resume Journey';
+      };
+
+      playBtn.addEventListener('click', () => {
+        updatePlayState(!isPlaying);
+      });
+    }
+
+    // Reset Route Button
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        clearTimeout(dwellTimer);
+        isDwelling = false;
+        targetDist = null;
+        currentDist = 0;
+        currentStopIdx = 0;
+        updateFloatingCard(stops[0]);
+        if (statusText) statusText.textContent = `Restarted from Jaipur Airport (30 km)`;
+      });
+    }
+
+    // 3D Parallax Tilt for Map Card on Mouse/Touch Movement
+    if (stage && mapCard && !reduce) {
+      let rect = null;
+      stage.addEventListener('mouseenter', () => { rect = stage.getBoundingClientRect(); });
+      stage.addEventListener('mousemove', (e) => {
+        if (!rect) rect = stage.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        mapCard.style.transform = `rotateX(${(6 - y * 12).toFixed(2)}deg) rotateY(${(-0.5 + x * 14).toFixed(2)}deg) translateZ(8px)`;
+      });
+      stage.addEventListener('mouseleave', () => {
+        rect = null;
+        mapCard.style.transform = `rotateX(6deg) rotateY(-0.5deg) translateZ(0px)`;
+      });
+    }
+
+    // Auto-start journey when section enters viewport
+    if (typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.create({
+        trigger: '#territory-map',
+        start: 'top 75%',
+        once: true,
+        onEnter: () => {
+          isPlaying = true;
+        }
+      });
+    }
+  })();
+
+  /* ==========================================================================
+     STORY CHRONICLE — PINNED ALTERNATING HORIZONTAL SCROLLYTELLING
+     ========================================================================== */
+  $$('.story-chronicle').forEach(sec => {
+    const pinWrap = $('.sc-pin', sec);
+    const chapters = $$('.sc-chapter', sec);
+    const stepBtns = $$('.sc-step', sec);
+    const progFill = $('.sc-progress-fill', sec);
+    if (!pinWrap || chapters.length < 2 || typeof ScrollTrigger === 'undefined' || reduce) return;
+
+    ScrollTrigger.matchMedia({
+      '(min-width: 992px)': () => {
+        sec.classList.add('is-pinned');
+        const N = chapters.length;
+
+        const setActiveStep = idx => {
+          chapters.forEach((ch, i) => ch.classList.toggle('is-active', i === idx));
+          stepBtns.forEach((b, i) => b.classList.toggle('is-active', i === idx));
+        };
+
+        chapters.forEach((ch, i) => {
+          const tx = $('.sc-text', ch), md = $('.sc-media', ch), im = $('.sc-img', ch);
+          if (i === 0) {
+            gsap.set(ch, { autoAlpha: 1 });
+            gsap.set([tx, md], { x: 0, y: 0, autoAlpha: 1, clipPath: 'inset(0% 0% 0% 0%)' });
+            if (im) gsap.set(im, { scale: 1.08 });
+          } else {
+            gsap.set(ch, { autoAlpha: 0 });
+          }
+        });
+        setActiveStep(0);
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sec,
+            pin: pinWrap,
+            start: 'top top',
+            end: () => `+=${Math.round(innerHeight * (N * 0.92))}`,
+            scrub: 0.75,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: self => {
+              const p = self.progress;
+              if (progFill) gsap.set(progFill, { scaleX: Math.max(0.08, p) });
+              const idx = Math.min(N - 1, Math.floor(p * N));
+              setActiveStep(idx);
+            }
+          }
+        });
+
+        for (let i = 0; i < N; i++) {
+          const ch = chapters[i];
+          const tx = $('.sc-text', ch), md = $('.sc-media', ch), im = $('.sc-img', ch);
+          const isRev = ch.classList.contains('is-reverse');
+          const segStart = i;
+
+          if (i === 0) {
+            if (im) tl.fromTo(im, { scale: 1.09 }, { scale: 1.0, duration: 0.75, ease: 'none' }, 0);
+          } else {
+            const clipFrom = isRev ? 'inset(0% 100% 0% 0%)' : 'inset(0% 0% 0% 100%)';
+            const xFrom = isRev ? -56 : 56;
+            const txFromX = isRev ? 40 : -40;
+            tl.set(ch, { autoAlpha: 1 }, segStart - 0.18)
+              .fromTo(md,
+                { x: xFrom, autoAlpha: 0, clipPath: clipFrom },
+                { x: 0, autoAlpha: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.48, ease: 'power2.out' },
+                segStart - 0.16
+              )
+              .fromTo(tx,
+                { x: txFromX, y: 42, autoAlpha: 0 },
+                { x: 0, y: 0, autoAlpha: 1, duration: 0.48, ease: 'power2.out' },
+                segStart - 0.12
+              );
+            if (im) {
+              tl.fromTo(im, { scale: 1.16 }, { scale: 1.0, duration: 0.85, ease: 'power1.out' }, segStart - 0.16);
+            }
+          }
+
+          if (i < N - 1) {
+            const exitAt = segStart + 0.68;
+            const xTo = isRev ? -44 : 44;
+            tl.to(tx, { y: -38, autoAlpha: 0, duration: 0.34, ease: 'power2.in' }, exitAt)
+              .to(md, { x: xTo, scale: 0.96, autoAlpha: 0, duration: 0.36, ease: 'power2.in' }, exitAt)
+              .set(ch, { autoAlpha: 0 }, exitAt + 0.37);
+          } else {
+            /* Hold final chapter gracefully before releasing pin */
+            tl.to(ch, { autoAlpha: 1, duration: 0.55 }, segStart + 0.35);
+          }
+        }
+
+        stepBtns.forEach((btn, idx) => {
+          btn.addEventListener('click', () => {
+            const st = tl.scrollTrigger;
+            if (!st) return;
+            const targetP = N > 1 ? (idx + 0.18) / N : 0;
+            const y = st.start + targetP * (st.end - st.start);
+            if (lenis) lenis.scrollTo(y, { duration: 1.1 });
+            else window.scrollTo({ top: y, behavior: 'smooth' });
+          });
+        });
+
+        return () => {
+          sec.classList.remove('is-pinned');
+          gsap.set(chapters, { clearProps: 'all' });
+        };
+      },
+
+      '(max-width: 991px)': () => {
+        sec.classList.remove('is-pinned');
+        chapters.forEach(ch => {
+          const md = $('.sc-media', ch), tx = $('.sc-text', ch), im = $('.sc-img', ch);
+          if (md) gsap.fromTo(md, { y: 45, opacity: 0.2 }, { y: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: ch, start: 'top 92%', end: 'top 48%', scrub: 0.75 } });
+          if (im) gsap.fromTo(im, { scale: 1.15, yPercent: -8 }, { scale: 1.02, yPercent: 8, ease: 'none', scrollTrigger: { trigger: ch, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+          if (tx) gsap.fromTo(tx, { y: 35, opacity: 0.2 }, { y: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: ch, start: 'top 88%', end: 'top 45%', scrub: 0.75 } });
+        });
+      }
+    });
+  });
+
+  /* ==========================================================================
+     GUEST SALON — CENTERED UPRIGHT CASLON SHOWCASE
+     ========================================================================== */
+  $$('.guest-salon').forEach(salon => {
+    const slides = $$('.gs-slide', salon);
+    const tabs = $$('.gs-tab', salon);
+    const prev = $('[data-gs-prev]', salon);
+    const next = $('[data-gs-next]', salon);
+    if (slides.length < 2) return;
+
+    let cur = 0, timer = null, paused = false;
+    const DUR = 5800;
+
+    const armTimer = () => {
+      clearTimeout(timer);
+      tabs.forEach(t => {
+        const b = $('.gs-tab-bar', t);
+        if (b) { if (hasGsap) gsap.killTweensOf(b); b.style.width = '0%'; }
+      });
+      const activeBar = tabs[cur] ? $('.gs-tab-bar', tabs[cur]) : null;
+      if (activeBar && hasGsap && !paused) {
+        gsap.fromTo(activeBar, { width: '0%' }, { width: '100%', duration: DUR / 1000, ease: 'none' });
+      }
+      if (!paused) {
+        timer = setTimeout(() => show(cur + 1), DUR);
+      }
+    };
+
+    const show = idx => {
+      cur = (idx + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === cur));
+      tabs.forEach((t, i) => {
+        const on = i === cur;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      armTimer();
+    };
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => show(i)));
+    prev?.addEventListener('click', () => show(cur - 1));
+    next?.addEventListener('click', () => show(cur + 1));
+    salon.addEventListener('mouseenter', () => {
+      paused = true;
+      clearTimeout(timer);
+      const b = tabs[cur] ? $('.gs-tab-bar', tabs[cur]) : null;
+      if (b && hasGsap) gsap.killTweensOf(b);
+    });
+    salon.addEventListener('mouseleave', () => {
+      paused = false;
+      armTimer();
+    });
+
+    if (hasGsap && !reduce) {
+      gsap.fromTo($('.gs-stage', salon),
+        { y: 45, opacity: 0.25 },
+        { y: 0, opacity: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: salon, start: 'top 90%', end: 'top 45%', scrub: 0.8 } }
+      );
+    }
+    armTimer();
+  });
+
+  /* ==========================================================================
+     MAHARAJA'S HAND-PAINTED HERITAGE SCROLL — UNROLLING PARCHMENT & BRUSHWORK
+     ========================================================================== */
+  (() => {
+    const scrollEl = $('#maharaja-scroll');
+    if (!scrollEl) return;
+
+    $$('[data-ms-words]', scrollEl).forEach(p => {
+      const words = p.textContent.trim().split(/\s+/);
+      p.innerHTML = words.map(w => `<span class="ms-w">${w}</span>`).join(' ');
+    });
+
+    if (!hasGsap || typeof ScrollTrigger === 'undefined' || reduce) {
+      $$('.ms-w', scrollEl).forEach(w => { w.style.opacity = '1'; });
+      return;
+    }
+
+    /* 1. Gentle Suryavanshi sun medallion rotation with scroll */
+    const surya = $('.ms-surya-svg', scrollEl);
+    if (surya) {
+      gsap.to(surya, {
+        rotation: 28,
+        ease: 'none',
+        scrollTrigger: { trigger: scrollEl, start: 'top top', end: 'bottom bottom', scrub: 1 }
+      });
+    }
+
+    /* 2. Hand-painted Jaipur miniature frescoes — unrolling parchment reveal */
+    $$('[data-ms-fresco]', scrollEl).forEach((fig, idx) => {
+      const im = $('.ms-fresco-img', fig);
+      if (!im) return;
+      if (idx === 0) {
+        gsap.fromTo(im,
+          { opacity: 0.15, y: 26, scale: 0.97 },
+          { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'power2.out' }
+        );
+      } else {
+        gsap.fromTo(im,
+          { clipPath: 'inset(0% 0% 18% 0%)', opacity: 0.2, y: 34, scale: 0.96 },
+          { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, scale: 1, ease: 'power2.out',
+            scrollTrigger: { trigger: fig, start: 'top 92%', end: 'top 46%', scrub: 0.75 } }
+        );
+      }
+    });
+
+    /* 3. Kos Minar fort distance milestones — mineral ink bloom along the route */
+    const kosItems = $$('[data-ms-kos]', scrollEl);
+    if (kosItems.length) {
+      kosItems.forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0.15, y: 22 + (i % 3) * 10 },
+          { opacity: 1, y: 0, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 94%', end: 'top 64%', scrub: 0.65 } }
+        );
+      });
+    }
+
+    /* 4. Winding vermilion-and-gold caravan trails & word-by-word scroll illumination */
+    $$('.ms-trail', scrollEl).forEach(tr => {
+      const path = $('.ms-trail-draw', tr);
+      const words = $$('.ms-w', tr);
+      if (path) {
+        try {
+          const L = path.getTotalLength();
+          gsap.set(path, { strokeDasharray: L, strokeDashoffset: L });
+          gsap.to(path, {
+            strokeDashoffset: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: tr, start: 'top 86%', end: 'bottom 38%', scrub: 0.55 }
+          });
+        } catch (_) {}
+      }
+      if (words.length) {
+        gsap.fromTo(words,
+          { opacity: 0.22 },
+          { opacity: 1, stagger: 0.04, ease: 'none',
+            scrollTrigger: { trigger: tr, start: 'top 82%', end: 'bottom 44%', scrub: 0.5 } }
+        );
+      }
+    });
+
+    /* 5. Chapter prose & Mehrab peep-windows gentle scroll rise */
+    $$('.ms-story-prose', scrollEl).forEach(pr => {
+      gsap.fromTo(pr,
+        { opacity: 0.22, y: 32 },
+        { opacity: 1, y: 0, ease: 'power2.out',
+          scrollTrigger: { trigger: pr, start: 'top 92%', end: 'top 52%', scrub: 0.75 } }
+      );
+    });
+    $$('[data-ms-peep]', scrollEl).forEach(peep => {
+      const pImg = $('img', peep);
+      gsap.fromTo(peep,
+        { opacity: 0.2, y: 40, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: peep, start: 'top 92%', end: 'top 50%', scrub: 0.8 } }
+      );
+      if (pImg && pImg.classList.contains('ms-peep-img')) {
+        gsap.fromTo(pImg,
+          { scale: 1.14, yPercent: -7 },
+          { scale: 1.02, yPercent: 7, ease: 'none',
+            scrollTrigger: { trigger: peep, start: 'top bottom', end: 'bottom top', scrub: 0.65 } }
+        );
+      }
     });
   })();
 

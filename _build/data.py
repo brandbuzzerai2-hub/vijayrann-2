@@ -1,9 +1,10 @@
 """Content for The Vijayran Palace site (edit text/images here)."""
 LIVE = "https://www.royalquestresorts.com/wp-content/uploads/"
 SITE = "https://www.royalquestresorts.com/"
-BOOK = "https://staahmax.staah.net/be/indexpackdetail?propertyId=MzEzMA==&individual=true"
-PHONE_ROOMS, PHONE_EVENTS = "+91 99998 22609", "+91 99991 63809"
-TEL_ROOMS, TEL_EVENTS = "+919999822609", "+919999163809"
+BOOK = "https://www.swiftbook.io/inst/#home?propertyId=622MTqtrrTvISYL6ULEQBTI2zhv8o6h6TcrQI2OTA=&JDRN=Y"
+BOOK_STAAH = "https://staahmax.staah.net/be/indexpackdetail?propertyId=MzEzMA==&individual=true"
+PHONE_ROOMS, PHONE_EVENTS, PHONE_PACKAGES = "+91 99998 22609", "+91 99991 63809", "+91 99997 66809"
+TEL_ROOMS, TEL_EVENTS, TEL_PACKAGES = "+919999822609", "+919999163809", "+919999766809"
 EMAIL, EMAIL_SALES = "resv@royalquestresorts.com", "sales@royalquestresorts.com"
 ADDRESS = "NH-8, Kukas, Village Kacherawala, Jaipur, Rajasthan 302028, India"
 # Exact Sujan fonts (Minion Pro + Brandon Grotesque) via Adobe Fonts.
@@ -60,26 +61,28 @@ ROOMS = [
         "A beautifully carved jharoka accompanies each luxurious suite, framing breathtaking views of the lush green surroundings, a scene straight out of a period drama and a beautiful setting for photographs."],
   facts=["4 suites available","600 sq ft each","Carved jharoka balcony","King-size bed","Bathtub","Multipurpose table","Electronic safe & mini bar","Air conditioned","Wi-Fi, iron & board on request"],
   gallery=["2021/05/jslide1.jpg","2021/05/jslide22.jpg","2021/05/Jharoka4.png"]),
- dict(slug="haveli-room-twin-bed", name="Haveli Rooms", short="Twin-bed rooms, thoughtfully priced", count="4 rooms · 450 sq ft",
+ dict(slug="haveli-room-twin-bed", name="Haveli Rooms", short="King-size or twin beds, thoughtfully priced", count="4 rooms · 450 sq ft",
   hero="2021/05/havali.jpg", panel="2021/05/havali012.jpg", card="2021/04/Haveli-Room-with-Twin-Bed.jpg",
-  seo="Haveli Rooms with Twin Beds | Heritage Resort Jaipur | The Vijayran Palace",
-  desc="Comfortable 450 sq ft Haveli Rooms with twin beds: the heritage luxury of The Vijayran Palace, Jaipur, for every budget.",
+  seo="Haveli Rooms with King or Twin Beds | Heritage Resort Jaipur | The Vijayran Palace",
+  desc="Comfortable 450 sq ft Haveli Rooms with king-size spring beds or twin beds: the heritage luxury of The Vijayran Palace, Jaipur, for every budget.",
   lead="A royal weekend for every budget.",
-  body=["We understand that not every holiday is the same, and sometimes you want to steal a weekend for yourself on a limited budget. Our passion for offering spectacular views and warm hospitality to every guest led us to create the Haveli Rooms with twin beds.",
+  body=["We understand that not every holiday is the same, and sometimes you want to steal a weekend for yourself on a thoughtful budget. Available with either a plush king-size spring bed or twin beds, our Haveli Rooms bring spectacular Aravalli views and warm hospitality within easy reach.",
         "Everyone deserves a beautiful, relaxing holiday, and budget should never be the constraint. Welcome to The Vijayran Palace. We await your arrival."],
-  facts=["4 rooms available","450 sq ft each","Twin beds","Multipurpose table","Electronic safe & mini bar","Air conditioned","Wi-Fi, iron & board on request"],
+  facts=["4 rooms available","450 sq ft each","King-size spring bed or twin beds","Multipurpose table","Electronic safe & mini bar","Air conditioned","Wi-Fi, iron & board on request"],
   gallery=["2021/05/havali.jpg","2021/05/havali012.jpg"]),
 ]
 
 EXPERIENCES = [
  ("Morning Yoga", "2021/05/In-Yoga-1.jpg", "Guided morning yoga in our outdoor spaces, with birdsong and the pleasant Aravalli air waiting to embrace you."),
+ ("Rang Mahal Spa & Wellness", "2021/05/tr-01.jpg", "Rejuvenating sixty-minute holistic and contemporary spa therapies in tranquil heritage suites—featured as a complimentary courtesy in our signature stay packages."),
  ("Rajasthani Folk Evenings", "2021/05/rajfolk.jpg", "An evening of music, dance and festivity: the Ravanahatha, Kalbeliya and Ghoomar, performed under the stars."),
- ("Ambar Taal Pool", "2021/06/ambertallpool-img.jpg", "An early-morning swim or a late evening by the pool. Water volleyball for the family and splashing fun for the children."),
+ ("Ambar Taal Pool", "2021/06/ambertallpool-img.jpg", "An early-morning swim or a late evening by our infinity-edge pool. Water volleyball for the family and splashing fun for the children."),
  ("Elephant Ride & Lunch", "2021/05/Lunch-with-elephant.jpg", "A short drive into the scenic hills of Amer: feed the elephants, ride through the hills, spot birds and enjoy local delicacies."),
- ("Horse Riding", "2021/06/horse-img.jpg", "Well-trained, friendly horses for a safe and thrilling ride, from pony rides for children to carriage rides for couples."),
+ ("Horse Riding", "2021/06/horse-img.jpg", "Well-trained, friendly Marwari horses for a safe and thrilling ride, from pony rides for children to carriage rides for couples."),
  ("Camel Ride", "2021/05/camel-ride.jpg", "Experience the authenticity of Rajasthan on a camel ride through the Aravalli hills."),
  ("Open Jeep Safari", "2021/05/jeep-safari.jpg", "Off-road jeeps take you out to encounter the wild animals and birds of Rajasthan."),
  ("Heritage & Village Walks", "2021/05/jaipur.jpg", "Walk to nature and village life near Amber Fort and Nahargarh, and discover the traditions of rural Rajasthan."),
+ ("Countryside Cycling", "2021/05/view.jpg", "Pedal along quiet Kukas foothill trails, wild khejri groves and scenic mountain lanes in the crisp morning or golden-hour breeze."),
  ("Bird Watching", "2021/05/bird.jpg", "More than 150 varieties of birds in their natural habitat: a quiet joy for every nature lover."),
 ]
 
@@ -118,11 +121,15 @@ FAQ = [
  ("Is vegetarian food available?", "Yes, a wide selection of vegetarian dishes is available at our restaurant, and we can prepare Jain meals on request."),
  ("Is there Wi-Fi?", "Yes, Wi-Fi is available across the resort and you are welcome to work from your room."),
  ("What safety precautions apply during safaris?", "Adventure activities carry inherent risk, and The Vijayran Palace accepts no liability arising from them. Please bring your own hat for jeep and camel safaris and keep children supervised."),
+ ("What hygiene and safety standards are followed at the palace?", "Every suite, villa and public courtyard is sanitized daily with WHO-recommended hospital-grade protocols. The Vijayran Palace holds an 8.7 Outstanding Hygiene & Safety certification."),
 ]
 
 REVIEWS = [
- ("Perfect place to spend your weekend far from the city's chaotic life. Beautiful property, helpful staff and amazing food. A Presidential Villa with a private pool and lawn is icing on the cake.", "Noopur Sharma"),
- ("We are so glad to have had such a positive experience at this heritage palace. The room was spacious with a beautiful view of the hills. Beautiful looking, and great hospitality.", "Amandeep Kaur"),
- ("A venue for a destination marriage that feels like a dream come true. Beautiful lawns, well-appointed rooms and an old traditional look with all modern amenities.", "Nidhi B"),
+ ("Perfect place to spend your weekend far from the city's chaotic life. Beautiful property, helpful staff and amazing food. Special thanks to the restaurant team for accommodating our kids' choices. A Presidential Villa with a private swimming pool and lawn is icing on the cake.", "Noopur Sharma"),
+ ("We are so glad to have had such a positive experience at this heritage palace. The staff was helpful and courteous, the swimming pool was amazing, and our spacious room looked out onto a beautiful view of the hills.", "Amandeep Kaur"),
+ ("A venue for a destination marriage that feels like a dream come true. Beautiful lawns, well-appointed rooms and an old traditional palace look paired with every modern amenity.", "Nidhi B"),
+ ("I visited with my family for a single day, and with the warmth of the hospitality we extended our stay to two nights. Even our bespoke Jain meals were prepared to perfection.", "Aditya G"),
+ ("VijayRan made a Vijay on our hearts! We were overwhelmed by the warmth of the staff, loved the lavish morning breakfast spread, and danced our hearts out to Sunday night Rajasthani folk music.", "Vaibhava Chhabra"),
+ ("Stayed across Courtyard and Jharoka Haveli Suites with two families—palatial exteriors, serene infinity pool, horse riding, cycling and genuinely humble service from arrival to farewell.", "Sandeep & Family"),
 ]
 
